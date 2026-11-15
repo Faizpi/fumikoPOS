@@ -90,7 +90,7 @@
 <main>
     <header>
         <div>
-            <div class="brand">Hibiscusefsya POS</div>
+            <div class="brand">Fumiko POS</div>
             <h1>{{ $title }}</h1>
             <span>{{ $record->nomor ?? '-' }}</span>
         </div>

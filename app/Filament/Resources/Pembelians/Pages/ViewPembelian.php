@@ -48,8 +48,9 @@ class ViewPembelian extends ViewRecord
                         TextEntry::make('created_at')->label('Dibuat')->dateTime('d M Y, H:i'),
                         TextEntry::make('syarat_pembayaran')->label('Syarat Bayar'),
                         TextEntry::make('tipe_harga')->label('Tipe Harga')->badge()->color(fn ($state) => $state === 'grosir' ? 'info' : 'success'),
-                        TextEntry::make('no_referensi')->label('No Referensi')->placeholder('—'),
-                        TextEntry::make('no_resi')->label('Nomor Resi')->placeholder('—'),
+                        TextEntry::make('no_referensi')->label('No Referensi')->placeholder('-'),
+                        TextEntry::make('no_surat_jalan')->label('No. Surat Jalan Supplier')->placeholder('-'),
+                        TextEntry::make('no_resi')->label('Nomor Resi')->placeholder('-'),
                         TextEntry::make('biaya_pengiriman')->label('Biaya Pengiriman')->money('IDR')->placeholder('—'),
                         TextEntry::make('status')
                             ->label('Status')
@@ -77,7 +78,8 @@ class ViewPembelian extends ViewRecord
                             ->label('')
                             ->schema([
                                 TextEntry::make('produk.nama_produk')->label('Produk')->weight('bold'),
-                                TextEntry::make('produk.item_code')->label('Kode')->placeholder('—'),
+                                TextEntry::make('ukuran')->label('Ukuran')->placeholder('-'),
+                                TextEntry::make('produk.item_code')->label('Kode')->placeholder('-'),
                                 TextEntry::make('kuantitas')->label('Qty')->suffix(fn ($record) => ' '.$record->unit),
                                 TextEntry::make('harga_satuan')->label('Harga')->money('IDR'),
                                 TextEntry::make('diskon')->label('Disc')->suffix('%'),

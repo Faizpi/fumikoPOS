@@ -15,7 +15,7 @@ class Pembelian extends Model
         'user_id', 'approver_id', 'kontak_id', 'no_urut_harian', 'nomor', 'uuid',
         'gudang_id', 'staf_penyetuju', 'email_penyetuju',
         'tgl_transaksi', 'syarat_pembayaran', 'tgl_jatuh_tempo',
-        'tipe_harga', 'no_referensi', 'no_resi', 'biaya_pengiriman',
+        'tipe_harga', 'no_referensi', 'no_surat_jalan', 'no_resi', 'biaya_pengiriman',
         'urgensi', 'tahun_anggaran', 'tag', 'koordinat', 'memo',
         'lampiran_path', 'lampiran_paths', 'status',
         'diskon_akhir', 'tax_percentage', 'grand_total',

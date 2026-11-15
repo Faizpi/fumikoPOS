@@ -33,6 +33,8 @@ class TransferKasPage extends Page
         return $user !== null && app(AccountingAuthorization::class)->canInitiateCashOperation($user);
     }
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrow-path';
 
     protected static string|UnitEnum|null $navigationGroup = 'Akuntansi';

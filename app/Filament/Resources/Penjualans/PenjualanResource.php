@@ -29,9 +29,11 @@ class PenjualanResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $modelLabel = 'Penjualan';
+    protected static ?string $navigationLabel = 'Barang Keluar (Penjualan)';
 
-    protected static ?string $pluralModelLabel = 'Penjualan';
+    protected static ?string $modelLabel = 'Barang Keluar';
+
+    protected static ?string $pluralModelLabel = 'Barang Keluar (Penjualan)';
 
     protected static ?string $recordTitleAttribute = 'nomor';
 

@@ -37,7 +37,7 @@ class TransaksiInvoiceMail extends Mailable
             ?? $this->transaksi->custom_number
             ?? $this->transaksi->id;
 
-        return $this->subject("Invoice {$label} #{$nomor} - Hibiscus Efsya")
+        return $this->subject("Invoice {$label} #{$nomor} - Fumiko Styrofoam")
             ->view('emails.transaksi-invoice')
             ->with([
                 'transaksi' => $this->transaksi,

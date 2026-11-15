@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 trait ReportAccess
 {
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function canAccess(): bool
     {
         return in_array(Auth::user()?->role, ['super_admin', 'spectator'], true);

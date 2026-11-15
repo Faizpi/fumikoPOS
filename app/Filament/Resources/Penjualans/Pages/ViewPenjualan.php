@@ -36,25 +36,26 @@ class ViewPenjualan extends ViewRecord
                 Section::make('Info Utama')
                     ->icon('heroicon-o-information-circle')
                     ->schema([
-                        TextEntry::make('nomor')->label('Nomor Invoice')->weight('bold'),
-                        TextEntry::make('status')
-                            ->label('Status')
+                        TextEntry::make('nomor')->label('Nomor Faktur / Nota')->weight('bold'),
+                        TextEntry::make('status_display')
+                            ->label('Status Payment')
                             ->badge()
                             ->color(fn (string $state): string => match ($state) {
                                 'Pending' => 'warning',
-                                'Approved' => 'primary',
+                                'Belum Lunas' => 'danger',
                                 'Lunas' => 'success',
                                 'Canceled' => 'gray',
                                 default => 'gray',
                             }),
-                        TextEntry::make('user.name')->label('Sales'),
-                        TextEntry::make('approver.name')->label('Approver')->placeholder('—'),
-                        TextEntry::make('pelanggan')->label('Pelanggan'),
-                        TextEntry::make('no_telepon')->label('No. Telepon')->placeholder('—')
+                        TextEntry::make('user.name')->label('Sales / Admin'),
+                        TextEntry::make('approver.name')->label('Approver')->placeholder('-'),
+                        TextEntry::make('nama_toko')->label('Nama Toko')->weight('bold')->placeholder('-'),
+                        TextEntry::make('pelanggan')->label('Nama Pembeli'),
+                        TextEntry::make('no_telepon')->label('No. HP')->placeholder('-')
                             ->formatStateUsing(fn ($state) => \receipt_format_phone($state)),
-                        TextEntry::make('alamat_penagihan')->label('Alamat Penagihan')->placeholder('—')->columnSpanFull(),
+                        TextEntry::make('alamat_penagihan')->label('Alamat Lengkap')->placeholder('-')->columnSpanFull(),
                         TextEntry::make('tgl_transaksi')->label('Tgl Transaksi')->date('d F Y'),
-                        TextEntry::make('tgl_jatuh_tempo')->label('Jatuh Tempo')->date('d F Y')->placeholder('—'),
+                        TextEntry::make('tgl_jatuh_tempo')->label('Jatuh Tempo')->date('d F Y')->placeholder('-'),
                         TextEntry::make('syarat_pembayaran')->label('Syarat Pembayaran'),
                         TextEntry::make('tipe_harga')
                             ->label('Tipe Harga')
@@ -62,27 +63,30 @@ class ViewPenjualan extends ViewRecord
                             ->formatStateUsing(fn ($state) => ucfirst($state))
                             ->color(fn ($state) => $state === 'grosir' ? 'info' : 'primary'),
                         TextEntry::make('gudang.nama_gudang')->label('Gudang'),
-                        TextEntry::make('no_referensi')->label('No. Referensi')->placeholder('—'),
+                        TextEntry::make('no_referensi')->label('No. Referensi')->placeholder('-'),
                     ])
                     ->columns(3),
 
-                Section::make('Item Penjualan')
+                Section::make('Daftar Pesanan Barang')
                     ->icon('heroicon-o-shopping-cart')
                     ->schema([
                         RepeatableEntry::make('items')
                             ->label('')
                             ->schema([
-                                TextEntry::make('produk.nama_produk')->label('Produk')->weight('bold'),
-                                TextEntry::make('produk.item_code')->label('SKU')->placeholder('—'),
+                                TextEntry::make('produk.nama_produk')->label('Nama Barang')->weight('bold'),
+                                TextEntry::make('ukuran_display')
+                                    ->label('Ukuran')
+                                    ->state(fn ($record) => $record->ukuran ?: ($record->produk?->ukuran ?: '-'))
+                                    ->badge()
+                                    ->color('info'),
+                                TextEntry::make('produk.item_code')->label('Kode')->placeholder('-'),
                                 TextEntry::make('kuantitas')->label('Qty')->suffix(fn ($record) => ' '.$record->unit),
                                 TextEntry::make('harga_satuan')->label('Harga')->money('IDR'),
                                 TextEntry::make('diskon')->label('Disc')->suffix('%'),
                                 TextEntry::make('diskon_nominal')->label('Disc Rp')->money('IDR'),
-                                TextEntry::make('batch_number')->label('Batch')->placeholder('—'),
-                                TextEntry::make('expired_date')->label('Exp')->date('d/m/Y')->placeholder('—'),
                                 TextEntry::make('jumlah_baris')->label('Total')->money('IDR')->weight('bold'),
                             ])
-                            ->columns(5),
+                            ->columns(4),
                     ]),
 
                 Section::make('Total & Pajak')
@@ -360,19 +364,35 @@ class ViewPenjualan extends ViewRecord
                     Notification::make()->title('Status kembali ke Pending. Perlu di-approve ulang.')->success()->send();
                 }),
 
+            // ===== CETAK FAKTUR / NOTA A5 =====
+            Action::make('printFakturA5')
+                ->label('Cetak Faktur / Nota (A5)')
+                ->icon('heroicon-o-document-text')
+                ->color('primary')
+                ->url(fn () => route('penjualan.print-faktur-a5', $record))
+                ->openUrlInNewTab(),
+
+            // ===== CETAK SURAT JALAN A5 =====
+            Action::make('printSuratJalanA5')
+                ->label('Cetak Surat Jalan (A5)')
+                ->icon('heroicon-o-truck')
+                ->color('info')
+                ->url(fn () => route('penjualan.print-surat-jalan-a5', $record))
+                ->openUrlInNewTab(),
+
             // ===== BLUETOOTH PRINT =====
             Action::make('bluetoothPrint')
-                ->label('Print Bluetooth')
+                ->label('Print Thermal')
                 ->icon('heroicon-o-printer')
-                ->color('primary')
+                ->color('gray')
                 ->extraAttributes([
                     'onclick' => "window.printViaBluetooth(this, 'penjualan', '".route('bluetooth.penjualan', $record->id)."', { printLogo: false }); return false;",
                 ]),
 
             Action::make('print')
-                ->label('Print')
+                ->label('Struk 58mm')
                 ->icon('heroicon-o-printer')
-                ->color('info')
+                ->color('gray')
                 ->url(fn () => route('penjualan.print', $record))
                 ->openUrlInNewTab(),
 

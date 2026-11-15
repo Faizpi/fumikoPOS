@@ -24,7 +24,7 @@
 
 <div class="invoice-container">
     <div class="invoice-header">
-        <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya" onerror="this.style.display='none'" class="max-w-[140px] mb-3 mx-auto">
+        <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam" onerror="this.style.display='none'" class="max-w-[140px] mb-3 mx-auto">
         <h1 class="text-lg font-bold text-gray-900 dark:text-white m-0">Permintaan Pembelian</h1>
         <div class="invoice-number text-[13px] text-gray-500 dark:text-gray-400 mt-1 font-medium">{{ $nomorInvoice }}</div>
     </div>
@@ -161,8 +161,8 @@
     </div>
 
     <div class="invoice-footer">
-        <strong>HIBISCUS EFSYA</strong>
-        marketing@hibiscusefsya.com
+        <strong>FUMIKO STYROFOAM</strong>
+        admin@fumiko.com
     </div>
 </div>
 @endsection

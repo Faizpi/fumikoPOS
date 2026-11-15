@@ -30,10 +30,10 @@ class PanelBootTest extends TestCase
     {
         $response = $this->get('/app/login');
         $response->assertStatus(200);
-        $response->assertSee('Hibiscus Efsya');
-        $response->assertSee('Kelola Keuangan Bisnis');
-        $response->assertSee('Real-time sales control');
-        $response->assertSee('Masuk ke Hibiscus Efsya POS');
+        $response->assertSee('Fumiko POS');
+        $response->assertSee('Kontrol Gudang, Tagihan & Uang Kas Fumiko', false);
+        $response->assertSee('Shortcut Login Demo');
+        $response->assertSee('Masuk ke Fumiko POS');
     }
 
     public function test_brand_component_constrains_logo_dimensions(): void
@@ -42,7 +42,7 @@ class PanelBootTest extends TestCase
 
         $this->assertStringContainsString('width="40"', $brand);
         $this->assertStringContainsString('height="40"', $brand);
-        $this->assertStringContainsString('Hibiscus Efsya', $brand);
+        $this->assertStringContainsString('Fumiko POS', $brand);
     }
 
     public function test_login_form_authenticates_super_admin(): void

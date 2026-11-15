@@ -41,27 +41,24 @@ class AppPanelProvider extends PanelProvider
                     ->label('Profil Saya')
                     ->url(fn (): string => ProfilePage::getUrl()),
             ])
-            ->brandName('Hibiscus Efsya')
+            ->brandName('Fumiko POS')
             ->brandLogo(fn () => view('filament.components.brand'))
             ->brandLogoHeight('2.5rem')
-            ->favicon(asset('assets/img/logoHE1.png'))
+            ->favicon(asset('assets/img/logo-fumiko.jpg'))
             ->font('Instrument Sans')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Amber,
             ])
             ->databaseNotifications()
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('17rem')
             ->maxContentWidth(Width::Full)
             ->navigationGroups([
-                NavigationGroup::make('Laporan'),
-                NavigationGroup::make('Kunjungan'),
-                NavigationGroup::make('Biaya'),
                 NavigationGroup::make('Piutang'),
-                NavigationGroup::make('Hutang'),
                 NavigationGroup::make('Gudang'),
-                NavigationGroup::make('Kontak'),
+                NavigationGroup::make('Hutang'),
                 NavigationGroup::make('Master Data'),
+                NavigationGroup::make('Kontak'),
                 NavigationGroup::make('Pengaturan'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

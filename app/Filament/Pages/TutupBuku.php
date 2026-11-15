@@ -22,6 +22,8 @@ class TutupBuku extends Page implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-folder';
 
     protected static ?string $title = 'Tutup Buku & Backup';

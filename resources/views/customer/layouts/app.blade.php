@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Portal Customer') — Hibiscus Efsya</title>
+    <title>@yield('title', 'Portal Customer') — Fumiko Styrofoam</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -383,8 +383,8 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light customer-navbar">
         <a class="navbar-brand font-weight-bold" href="{{ route('customer.dashboard') }}">
-            <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
-            <span>Hibiscus Efsya</span>
+            <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam">
+            <span>Fumiko Styrofoam</span>
         </a>
         <div class="ml-auto d-flex align-items-center gap-2" style="gap:0.5rem">
             <span class="customer-name mr-1">{{ session('customer_nama', '') }}</span>

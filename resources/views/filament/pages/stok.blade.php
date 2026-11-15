@@ -2,16 +2,145 @@
     @php
         $data = $this->getData();
         $stok7Hari = $this->getStok7HariData();
+
+        $allItems = $data['gudangs']->flatMap(fn ($g) => $g->gudangProduks)->filter(fn ($s) => $s->produk !== null);
+        $countBahanJual = $allItems->filter(fn ($s) => ($s->produk->kategori_barang ?? 'bahan_jual') === 'bahan_jual')->sum('stok');
+        $countAset = $allItems->filter(fn ($s) => ($s->produk->kategori_barang ?? '') === 'aset_perusahaan')->sum('stok');
+        $countLain = $allItems->filter(fn ($s) => ($s->produk->kategori_barang ?? '') === 'lain_lain')->sum('stok');
     @endphp
 
-    {{-- Stock Barang 7 Hari Widget --}}
+    {{-- Ringkasan Kategori Gudang Harian --}}
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-4">
+        <x-filament::section>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Bahan Dijual (Produk Styrofoam)</p>
+            <p class="text-2xl font-bold text-primary-600 tabular-nums">{{ number_format($countBahanJual) }} unit</p>
+        </x-filament::section>
+        <x-filament::section>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Aset Perusahaan</p>
+            <p class="text-2xl font-bold text-warning-600 tabular-nums">{{ number_format($countAset) }} unit</p>
+        </x-filament::section>
+        <x-filament::section>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Lain-lain (Pendukung Gudang)</p>
+            <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 tabular-nums">{{ number_format($countLain) }} unit</p>
+        </x-filament::section>
+    </div>
+
+    {{-- Filter Kategori --}}
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+        @foreach([
+            'semua' => 'Semua Barang & Aset',
+            'bahan_jual' => 'Bahan Dijual',
+            'aset_perusahaan' => 'Aset Perusahaan',
+            'lain_lain' => 'Lain-lain',
+        ] as $katKey => $katLabel)
+            <button
+                type="button"
+                wire:click="$set('filter_kategori', '{{ $katKey }}')"
+                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {{ ($this->filter_kategori ?? 'semua') === $katKey ? 'bg-primary-600 text-white shadow-sm' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700' }}"
+            >
+                {{ $katLabel }}
+            </button>
+        @endforeach
+    </div>
+
+    {{-- Daftar Stok per Gudang --}}
+    <div class="space-y-4">
+        @forelse($data['gudangs'] as $gudang)
+            @php
+                $filteredProduks = $gudang->gudangProduks->filter(function ($s) {
+                    if (! $s->produk) {
+                        return false;
+                    }
+                    $kat = $this->filter_kategori ?? 'semua';
+                    if ($kat === 'semua') {
+                        return true;
+                    }
+
+                    return ($s->produk->kategori_barang ?? 'bahan_jual') === $kat;
+                });
+            @endphp
+            <x-filament::section collapsible :collapsed="false">
+                <x-slot name="heading">
+                    <div class="flex items-center justify-between w-full">
+                        <span class="font-semibold">{{ $gudang->nama_gudang }}</span>
+                        <x-filament::badge color="gray">
+                            {{ $filteredProduks->count() }} item |
+                            Total Stok: {{ number_format($filteredProduks->sum('stok')) }}
+                        </x-filament::badge>
+                    </div>
+                </x-slot>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm tabular-nums">
+                        <thead>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Nama Barang</th>
+                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Ukuran</th>
+                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Kategori</th>
+                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Kode</th>
+                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Stok Jual</th>
+                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Bonus/Gratis</th>
+                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Sample</th>
+                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400 font-semibold">Total Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($filteredProduks as $stok)
+                                @php
+                                    $kat = $stok->produk->kategori_barang ?? 'bahan_jual';
+                                    $katLabel = \App\Models\Produk::KATEGORI_OPTIONS[$kat] ?? 'Bahan Dijual';
+                                @endphp
+                                <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                                    <td class="py-2 px-3 font-medium">{{ $stok->produk->nama_produk }}</td>
+                                    <td class="py-2 px-3 font-semibold text-primary-600 dark:text-primary-400">{{ $stok->produk->ukuran ?: '-' }}</td>
+                                    <td class="py-2 px-3">
+                                        <x-filament::badge color="{{ $kat === 'aset_perusahaan' ? 'warning' : ($kat === 'lain_lain' ? 'gray' : 'success') }}">
+                                            {{ $katLabel }}
+                                        </x-filament::badge>
+                                    </td>
+                                    <td class="py-2 px-3 text-gray-500 font-mono text-xs">{{ $stok->produk->item_code ?? '-' }}</td>
+                                    <td class="py-2 px-3 text-right">{{ number_format($stok->stok_penjualan ?? 0) }}</td>
+                                    <td class="py-2 px-3 text-right text-success-600">{{ number_format($stok->stok_gratis ?? 0) }}</td>
+                                    <td class="py-2 px-3 text-right text-warning-600">{{ number_format($stok->stok_sample ?? 0) }}</td>
+                                    <td class="py-2 px-3 text-right font-bold">{{ number_format($stok->stok) }} {{ $stok->produk->satuan ?? 'Pcs' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="py-6 text-center text-gray-500">Belum ada stok untuk kategori ini.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                        @if($filteredProduks->count() > 0)
+                        <tfoot>
+                            <tr class="bg-gray-50 dark:bg-gray-800">
+                                <td colspan="4" class="py-2 px-3 font-semibold text-right">Total:</td>
+                                <td class="py-2 px-3 text-right font-semibold">{{ number_format($filteredProduks->sum('stok_penjualan')) }}</td>
+                                <td class="py-2 px-3 text-right font-semibold text-success-600">{{ number_format($filteredProduks->sum('stok_gratis')) }}</td>
+                                <td class="py-2 px-3 text-right font-semibold text-warning-600">{{ number_format($filteredProduks->sum('stok_sample')) }}</td>
+                                <td class="py-2 px-3 text-right font-bold text-primary-600">{{ number_format($filteredProduks->sum('stok')) }}</td>
+                            </tr>
+                        </tfoot>
+                        @endif
+                    </table>
+                </div>
+            </x-filament::section>
+        @empty
+            <x-filament::section>
+                <div class="text-center py-8 text-gray-500">
+                    <p>Belum ada data stok tersedia.</p>
+                </div>
+            </x-filament::section>
+        @endforelse
+    </div>
+
+    {{-- Pergerakan 7 Hari Terakhir --}}
     @if($stok7Hari->isNotEmpty())
-    <x-filament::section heading="Informasi Stock Barang 7 Hari" icon="heroicon-o-clock" class="mb-4">
+    <x-filament::section heading="Pergerakan Stok 7 Hari Terakhir" icon="heroicon-o-clock" class="mt-4" collapsible :collapsed="true">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm tabular-nums">
                 <thead>
                     <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <th class="text-left py-2 px-3 font-medium">Produk</th>
+                        <th class="text-left py-2 px-3 font-medium">Barang</th>
                         <th class="text-right py-2 px-3 font-medium">Total Perubahan</th>
                         <th class="text-right py-2 px-3 font-medium">Frekuensi</th>
                         <th class="text-right py-2 px-3 font-medium">Terakhir</th>
@@ -30,79 +159,5 @@
             </table>
         </div>
     </x-filament::section>
-    @else
-    <x-filament::section heading="Informasi Stock Barang 7 Hari" class="mb-4">
-        <p class="text-center py-4 text-gray-500">Belum ada perubahan stok dalam 7 hari terakhir.</p>
-    </x-filament::section>
     @endif
-
-    {{-- Accordion per gudang --}}
-    <div class="space-y-4">
-        @forelse($data['gudangs'] as $gudang)
-            <x-filament::section collapsible :collapsed="false">
-                <x-slot name="heading">
-                    <div class="flex items-center justify-between w-full">
-                        <span class="font-semibold">{{ $gudang->nama_gudang }}</span>
-                        <x-filament::badge color="gray">
-                            {{ $gudang->gudangProduks->count() }} produk ·
-                            Total: {{ number_format($gudang->gudangProduks->sum('stok')) }}
-                        </x-filament::badge>
-                    </div>
-                </x-slot>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Produk</th>
-                                <th class="text-left py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Item Code</th>
-                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Penjualan</th>
-                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Gratis</th>
-                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400">Sample</th>
-                                <th class="text-right py-2 px-3 font-medium text-gray-600 dark:text-gray-400 font-semibold">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($gudang->gudangProduks as $stok)
-                                @if($stok->produk)
-                                    <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                        <td class="py-2 px-3 font-medium">{{ $stok->produk->nama_produk }}</td>
-                                        <td class="py-2 px-3 text-gray-500 font-mono text-xs">{{ $stok->produk->item_code ?? '—' }}</td>
-                                        <td class="py-2 px-3 text-right">{{ number_format($stok->stok_penjualan ?? 0) }}</td>
-                                        <td class="py-2 px-3 text-right text-green-600">{{ number_format($stok->stok_gratis ?? 0) }}</td>
-                                        <td class="py-2 px-3 text-right text-yellow-600">{{ number_format($stok->stok_sample ?? 0) }}</td>
-                                        <td class="py-2 px-3 text-right font-bold">{{ number_format($stok->stok) }}</td>
-                                    </tr>
-                                @endif
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="py-4 text-center text-gray-500">Belum ada stok di gudang ini.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                        @if($gudang->gudangProduks->count() > 0)
-                        <tfoot>
-                            <tr class="bg-gray-50 dark:bg-gray-800">
-                                <td colspan="2" class="py-2 px-3 font-semibold text-right">Total:</td>
-                                <td class="py-2 px-3 text-right font-semibold">{{ number_format($gudang->gudangProduks->sum('stok_penjualan')) }}</td>
-                                <td class="py-2 px-3 text-right font-semibold text-green-600">{{ number_format($gudang->gudangProduks->sum('stok_gratis')) }}</td>
-                                <td class="py-2 px-3 text-right font-semibold text-yellow-600">{{ number_format($gudang->gudangProduks->sum('stok_sample')) }}</td>
-                                <td class="py-2 px-3 text-right font-bold text-primary-600">{{ number_format($gudang->gudangProduks->sum('stok')) }}</td>
-                            </tr>
-                        </tfoot>
-                        @endif
-                    </table>
-                </div>
-            </x-filament::section>
-        @empty
-            <x-filament::section>
-                <div class="text-center py-8 text-gray-500">
-                    <svg class="mx-auto h-12 w-12 mb-3 opacity-40 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/>
-                    </svg>
-                    <p>Belum ada data stok tersedia.</p>
-                </div>
-            </x-filament::section>
-        @endforelse
-    </div>
 </x-filament-panels::page>

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan {{ ucfirst($exportType ?? 'all') }} - Hibiscus Efsya</title>
+    <title>Laporan {{ ucfirst($exportType ?? 'all') }} - Fumiko Styrofoam</title>
     <style>
         @page { margin: 14px 16px; }
         body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 7.5px; color: #1f2937; margin: 0; }
@@ -166,7 +166,7 @@
 @endphp
 
 <div class="brand">
-    <h1>Hibiscus Efsya POS - Laporan {{ $reportTitle }}</h1>
+    <h1>Fumiko POS - Laporan {{ $reportTitle }}</h1>
     <p class="meta">
         Periode: {{ isset($dateFrom) ? $date($dateFrom) : '-' }} s/d {{ isset($dateTo) ? $date($dateTo) : '-' }}
         | Dicetak oleh: {{ $generatedBy ?? 'System' }}
@@ -271,6 +271,6 @@
     @endif
 @endif
 
-<div class="footer">Hibiscus Efsya POS - Laporan {{ $reportTitle }} | {{ $generatedAt ?? now()->format('d/m/Y H:i') }}</div>
+<div class="footer">Fumiko POS - Laporan {{ $reportTitle }} | {{ $generatedAt ?? now()->format('d/m/Y H:i') }}</div>
 </body>
 </html>

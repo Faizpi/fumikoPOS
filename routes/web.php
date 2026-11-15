@@ -63,6 +63,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('bluetooth/kunjungan/{id}', [BluetoothPrintController::class, 'kunjunganJson'])->name('bluetooth.kunjungan');
 
     Route::get('penjualan/{penjualan}/print', [PublicDocumentController::class, 'printPenjualan'])->name('penjualan.print');
+    Route::get('penjualan/{penjualan}/faktur-a5', function (\App\Models\Penjualan $penjualan) {
+        $penjualan->load(['items.produk', 'user', 'approver', 'gudang', 'pembayarans']);
+
+        return view('print.faktur-a5', ['penjualan' => $penjualan]);
+    })->name('penjualan.print-faktur-a5');
+    Route::get('penjualan/{penjualan}/surat-jalan-a5', function (\App\Models\Penjualan $penjualan) {
+        $penjualan->load(['items.produk', 'user', 'approver', 'gudang']);
+
+        return view('print.surat-jalan-a5', ['penjualan' => $penjualan]);
+    })->name('penjualan.print-surat-jalan-a5');
     Route::get('penjualan/{penjualan}/print-rich', [PrintController::class, 'penjualanRichText'])->name('penjualan.printRich');
     Route::get('pembelian/{pembelian}/print', [PublicDocumentController::class, 'printPembelian'])->name('pembelian.print');
     Route::get('pembelian/{pembelian}/print-rich', [PrintController::class, 'pembelianRichText'])->name('pembelian.printRich');
@@ -71,6 +81,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kunjungan/{kunjungan}/print', [PublicDocumentController::class, 'printKunjungan'])->name('kunjungan.print');
     Route::get('pembayaran/{pembayaran}/print', [PublicDocumentController::class, 'printPembayaran'])->name('pembayaran.print');
     Route::get('penerimaan-barang/{penerimaanBarang}/print', [PublicDocumentController::class, 'printPenerimaanBarang'])->name('penerimaan-barang.print');
+    Route::get('penerimaan-barang/{penerimaanBarang}/surat-jalan-a5', function (\App\Models\PenerimaanBarang $penerimaanBarang) {
+        $penerimaanBarang->load(['items.produk', 'user', 'approver', 'gudang', 'pembelian.kontak']);
+
+        return view('print.surat-jalan-masuk-a5', ['penerimaan' => $penerimaanBarang]);
+    })->name('penerimaan-barang.print-surat-jalan-a5');
 
     Route::get('produk/{produk}/print', [PublicDocumentController::class, 'printProduk'])->name('produk.print');
     Route::get('produk/{produk}/download', [PublicDocumentController::class, 'downloadProduk'])->name('produk.download');

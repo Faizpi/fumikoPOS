@@ -29,9 +29,9 @@ class PembayaranResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $modelLabel = 'Pembayaran Piutang';
+    protected static ?string $modelLabel = 'Uang Kas & Pembayaran';
 
-    protected static ?string $pluralModelLabel = 'Pembayaran Piutang';
+    protected static ?string $pluralModelLabel = 'Uang Kas & Pembayaran';
 
     public static function form(Schema $schema): Schema
     {
@@ -56,8 +56,7 @@ class PembayaranResource extends Resource
             return false;
         }
 
-        // Excel: Sales ❌, Admin ❌, Spectator ❌, SuperAdmin ✅
-        return $user->isSuperAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin();
     }
 
     public static function canEdit($record): bool
@@ -92,8 +91,7 @@ class PembayaranResource extends Resource
             return false;
         }
 
-        // Excel: Sales ❌, Admin ❌, Spectator ✅ VIEW, SuperAdmin ✅ ALL
-        return $user->isSpectator() || $user->isSuperAdmin();
+        return $user->isSpectator() || $user->isSuperAdmin() || $user->canAccessGudang($record->gudang_id);
     }
 
     public static function getPages(): array

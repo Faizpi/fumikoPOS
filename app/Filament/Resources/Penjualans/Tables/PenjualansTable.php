@@ -3,17 +3,15 @@
 namespace App\Filament\Resources\Penjualans\Tables;
 
 use App\Filament\Concerns\TransactionDeleteGuard;
-use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class PenjualansTable
 {
@@ -29,92 +27,102 @@ class PenjualansTable
                     ->sortable(),
 
                 TextColumn::make('nomor')
-                    ->label('Nomor')
+                    ->label('No. Faktur')
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->copyable()
-                    ->copyMessage('Nomor invoice disalin'),
+                    ->copyable(),
 
-                TextColumn::make('user.name')
-                    ->label('Pembuat')
+                TextColumn::make('nama_toko')
+                    ->label('Nama Toko')
                     ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('approver.name')
-                    ->label('Approver')
-                    ->placeholder('—')
-                    ->toggleable(),
+                    ->weight('bold')
+                    ->placeholder('-'),
 
                 TextColumn::make('pelanggan')
-                    ->label('Pelanggan')
-                    ->searchable()
-                    ->wrap(),
+                    ->label('Nama Pembeli')
+                    ->searchable(),
 
-                TextColumn::make('gudang.nama_gudang')
-                    ->label('Gudang')
+                TextColumn::make('no_telepon')
+                    ->label('No. HP')
+                    ->searchable()
+                    ->placeholder('-')
+                    ->formatStateUsing(fn ($state) => \receipt_format_phone($state)),
+
+                TextColumn::make('items_summary')
+                    ->label('Barang & Ukuran')
+                    ->state(function ($record): string {
+                        return $record->items->map(function ($item) {
+                            $ukuran = $item->ukuran ?: $item->produk?->ukuran;
+                            $label = $item->produk?->nama_produk ?? '-';
+
+                            return $ukuran
+                                ? "{$label} ({$ukuran}) x{$item->kuantitas}"
+                                : "{$label} x{$item->kuantitas}";
+                        })->implode(', ');
+                    })
+                    ->limit(45)
+                    ->tooltip(fn ($state): string => (string) $state),
+
+                TextColumn::make('syarat_pembayaran')
+                    ->label('Syarat Bayar')
                     ->badge()
-                    ->color('info')
-                    ->toggleable(),
+                    ->color('gray'),
 
                 TextColumn::make('grand_total')
-                    ->label('Total')
+                    ->label('Total Tagihan')
                     ->money('IDR')
                     ->sortable()
                     ->alignRight()
                     ->weight('bold'),
 
-                TextColumn::make('status')
-                    ->label('Status')
+                TextColumn::make('status_display')
+                    ->label('Status Payment')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'Pending' => 'warning',
-                        'Approved' => 'primary',
+                        'Belum Lunas' => 'danger',
                         'Lunas' => 'success',
-                        'Rejected' => 'danger',
                         'Canceled' => 'gray',
                         default => 'gray',
-                    })
-                    ->icon(fn (string $state): string => match ($state) {
-                        'Pending' => 'heroicon-o-clock',
-                        'Approved' => 'heroicon-o-check-circle',
-                        'Lunas' => 'heroicon-o-banknotes',
-                        'Canceled' => 'heroicon-o-x-circle',
-                        default => 'heroicon-o-question-mark-circle',
                     }),
-
-                TextColumn::make('tgl_jatuh_tempo')
-                    ->label('Jatuh Tempo')
-                    ->date('d/m/Y')
-                    ->placeholder('—')
-                    ->color(fn ($record) => $record->status === 'Approved' && $record->tgl_jatuh_tempo && $record->tgl_jatuh_tempo->isPast() ? 'danger' : null)
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label('Status Payment')
                     ->options([
-                        'Pending' => 'Pending',
-                        'Approved' => 'Approved',
-                        'Lunas' => 'Lunas',
-                        'Rejected' => 'Rejected',
-                        'Canceled' => 'Canceled',
+                        'Pending' => 'Pending (Menunggu)',
+                        'Approved' => 'Belum Lunas (Tagihan Luar)',
+                        'Lunas' => 'Sudah Dibayar (Lunas)',
+                        'Canceled' => 'Dibatalkan',
                     ]),
-
-                SelectFilter::make('user_id')
-                    ->label('Sales')
-                    ->options(fn () => User::where('role', 'user')->pluck('name', 'id'))
-                    ->visible(fn () => in_array(auth()->user()?->role, ['super_admin', 'admin', 'spectator']))
-                    ->searchable()
-                    ->preload(),
-
-                Filter::make('jatuh_tempo_lewat')
-                    ->label('Jatuh Tempo Lewat')
-                    ->query(fn (Builder $query) => $query->where('status', 'Approved')->whereDate('tgl_jatuh_tempo', '<', now())),
+                SelectFilter::make('syarat_pembayaran')
+                    ->label('Syarat Pembayaran')
+                    ->options([
+                        'Cash' => 'Cash / Tunai',
+                        'Net 7' => 'Tempo 7 Hari',
+                        'Net 14' => 'Tempo 14 Hari',
+                        'Net 30' => 'Tempo 30 Hari',
+                        'Net 60' => 'Tempo 60 Hari',
+                    ]),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
+                Action::make('fakturA5')
+                    ->label('Faktur A5')
+                    ->icon('heroicon-o-document-text')
+                    ->color('primary')
+                    ->url(fn ($record) => route('penjualan.print-faktur-a5', $record))
+                    ->openUrlInNewTab(),
+                Action::make('suratJalanA5')
+                    ->label('Surat Jalan A5')
+                    ->icon('heroicon-o-truck')
+                    ->color('info')
+                    ->url(fn ($record) => route('penjualan.print-surat-jalan-a5', $record))
+                    ->openUrlInNewTab(),
                 ViewAction::make(),
-                EditAction::make()->visible(fn () => auth()->user()?->isSuperAdmin()),
+                EditAction::make()
+                    ->visible(fn ($record) => auth()->user()?->isSuperAdmin() && ! in_array($record->status, ['Approved', 'Lunas'], true)),
                 DeleteAction::make()
                     ->visible(fn ($record): bool => auth()->user()?->isSuperAdmin() && TransactionDeleteGuard::canDeletePenjualan($record)),
             ])
@@ -124,8 +132,8 @@ class PenjualansTable
                         ->visible(fn (): bool => false),
                 ]),
             ])
-            ->emptyStateHeading('Belum ada penjualan')
-            ->emptyStateDescription('Buat penagihan baru untuk mulai mencatat penjualan.')
-            ->emptyStateIcon('heroicon-o-document-currency-dollar');
+            ->emptyStateHeading('Belum ada transaksi barang keluar')
+            ->emptyStateDescription('Buat transaksi barang keluar baru untuk mencetak Surat Jalan & Faktur A5.')
+            ->emptyStateIcon('heroicon-o-shopping-cart');
     }
 }

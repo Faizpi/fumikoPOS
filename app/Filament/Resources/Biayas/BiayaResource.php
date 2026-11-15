@@ -21,6 +21,8 @@ class BiayaResource extends Resource
 {
     use ScopeByRole;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $model = Biaya::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-wallet';

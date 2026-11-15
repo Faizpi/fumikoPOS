@@ -40,6 +40,7 @@ $commands = [
     'Baseline Legacy Migrations' => 'migrate:mark-ran --except-accounting',
     'Fix Missing Legacy Tables' => 'fix-tables',
     'Seed Accounting COA' => 'db:seed --class=HibiscusEfsyaChartOfAccountsSeeder --force',
+    'Seed Demo Fumiko' => 'db:seed --class=FumikoDemoSeeder --force',
     'Filament Upgrade' => 'filament:upgrade',
     'Apply Transaction Integrity Fixes' => 'migrate --force',
     'Audit Transaction Integrity' => 'audit:transaction-integrity',
@@ -53,6 +54,7 @@ $presets = [
     'Filament Assets Update' => ['Filament Upgrade', 'Cache Clear', 'View Clear', 'Optimize'],
     'Upgrade Restored Legacy DB' => ['Sync Legacy Schema', 'Baseline Legacy Migrations', 'Fix Missing Legacy Tables', 'Migrate Production', 'Seed Accounting COA', 'Cache Clear', 'View Clear', 'Optimize', 'Migrate Status'],
     'Production Migration' => ['Migrate Production', 'Seed Accounting COA', 'Cache Clear', 'View Clear', 'Optimize', 'Migrate Status'],
+    'Fresh Fumiko Setup' => ['Migrate Production', 'Seed Demo Fumiko', 'Storage Force Link', 'Cache Clear', 'View Clear', 'Optimize', 'Migrate Status'],
     'Transaction Integrity Update' => ['Apply Transaction Integrity Fixes', 'Audit Transaction Integrity', 'Audit Duplicate Nomor', 'Audit Stock Consistency', 'Cache Clear', 'View Clear', 'Optimize', 'Migrate Status'],
 ];
 
@@ -165,7 +167,7 @@ $logSize = file_exists($logFile) ? round(filesize($logFile) / 1024, 1).' KB' : '
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deploy Console — <?= htmlspecialchars(basename($projectPath)) ?></title>
+<title>Fumiko POS Deploy Console - <?= htmlspecialchars(basename($projectPath)) ?></title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 

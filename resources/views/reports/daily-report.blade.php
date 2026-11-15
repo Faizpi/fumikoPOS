@@ -29,7 +29,7 @@
     @endphp
 
     <div class="brand">
-        <h1>Hibiscus Efsya POS - Laporan Harian</h1>
+        <h1>Fumiko POS - Laporan Harian</h1>
         <p><strong>Sales:</strong> {{ $salesName ?? '-' }} | <strong>Tanggal:</strong> {{ $date ?? '-' }} | Dicetak: {{ $generatedAt ?? now()->format('d/m/Y H:i') }}</p>
     </div>
 

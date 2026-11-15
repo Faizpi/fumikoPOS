@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pembayarans\Pages;
 
 use App\Filament\Resources\Pembayarans\PembayaranResource;
+use App\Filament\Resources\Pembayarans\Widgets\UangKasStatsWidget;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -11,6 +12,13 @@ use Illuminate\Database\Eloquent\Builder;
 class ListPembayarans extends ListRecords
 {
     protected static string $resource = PembayaranResource::class;
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UangKasStatsWidget::class,
+        ];
+    }
 
     protected function getHeaderActions(): array
     {

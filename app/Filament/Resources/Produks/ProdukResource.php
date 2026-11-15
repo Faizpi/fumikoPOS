@@ -21,13 +21,15 @@ class ProdukResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cube';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Pengaturan';
+    protected static string|UnitEnum|null $navigationGroup = 'Gudang';
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $modelLabel = 'Produk';
+    protected static ?string $navigationLabel = 'Master Barang & Ukuran';
 
-    protected static ?string $pluralModelLabel = 'Produk';
+    protected static ?string $modelLabel = 'Barang / Aset';
+
+    protected static ?string $pluralModelLabel = 'Master Barang & Ukuran';
 
     protected static ?string $recordTitleAttribute = 'nama_produk';
 
@@ -43,17 +45,17 @@ class ProdukResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        return in_array(auth()->user()?->role, ['super_admin', 'admin'], true);
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        return in_array(auth()->user()?->role, ['super_admin', 'admin'], true);
     }
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->isSuperAdmin() ?? false;
+        return in_array(auth()->user()?->role, ['super_admin', 'admin'], true);
     }
 
     public static function canDelete($record): bool

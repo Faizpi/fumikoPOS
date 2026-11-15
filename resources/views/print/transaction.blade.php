@@ -134,10 +134,10 @@
 
 <main class="receipt-paper">
     <header>
-        @if (file_exists(public_path('assets/img/logoHE1.png')))
-            <img class="receipt-logo" src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
+        @if (file_exists(public_path('assets/img/logo-fumiko.jpg')))
+            <img class="receipt-logo" src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam">
         @endif
-        <div class="brand-name">HIBISCUS EFSYA</div>
+        <div class="brand-name">FUMIKO STYROFOAM</div>
         <div class="doc-title">{{ $receiptTitle ?? strtoupper($title) }}</div>
     </header>
 
@@ -150,9 +150,9 @@
     <footer class="receipt-footer">
         <strong>Periksa Invoice & Ambil Promo !</strong>
         <div class="dash">{{ $receiptDashLine }}</div>
-        <div>customer.hibiscusefsya.com</div>
+        <div>fumiko.local</div>
         <div class="dash">{{ $receiptDashLine }}</div>
-        <div>marketing@hibiscusefsya.com</div>
+        <div>admin@fumiko.com</div>
         <div style="height: 1mm"></div>
         <div>Official WA Chat:</div>
         <div>+62 851-9555-0202</div>

@@ -32,13 +32,18 @@ class PembeliansTable
                     ->weight('bold')
                     ->copyable(),
 
+                TextColumn::make('no_surat_jalan')
+                    ->label('No. Surat Jalan')
+                    ->placeholder('-')
+                    ->searchable(),
+
                 TextColumn::make('user.name')
                     ->label('Pembuat')
                     ->searchable(),
 
                 TextColumn::make('approver.name')
                     ->label('Approver')
-                    ->placeholder('—'),
+                    ->placeholder('-'),
 
                 TextColumn::make('gudang.nama_gudang')
                     ->label('Gudang')
@@ -47,7 +52,7 @@ class PembeliansTable
 
                 TextColumn::make('kontak.nama')
                     ->label('Supplier')
-                    ->placeholder('—')
+                    ->placeholder('-')
                     ->searchable(),
 
                 TextColumn::make('urgensi')

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Produks\Tables;
 
+use App\Models\Produk;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -19,34 +20,46 @@ class ProduksTable
             ->summaries(false, false)
             ->columns([
                 TextColumn::make('item_code')
-                    ->label('SKU')
+                    ->label('Kode')
                     ->searchable()
                     ->sortable()
                     ->copyable()
-                    ->copyMessage('Item code disalin')
-                    ->placeholder('—')
+                    ->copyMessage('Kode barang disalin')
+                    ->placeholder('-')
                     ->badge()
                     ->color('gray'),
 
                 TextColumn::make('nama_produk')
-                    ->label('Nama Produk')
+                    ->label('Nama Barang')
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
                     ->wrap(),
 
+                TextColumn::make('ukuran')
+                    ->label('Ukuran')
+                    ->searchable()
+                    ->placeholder('-')
+                    ->badge()
+                    ->color('info'),
+
+                TextColumn::make('kategori_barang')
+                    ->label('Kategori')
+                    ->formatStateUsing(fn (?string $state): string => Produk::KATEGORI_OPTIONS[$state ?? 'bahan_jual'] ?? 'Bahan Dijual (Produk)')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        'aset_perusahaan' => 'warning',
+                        'lain_lain' => 'gray',
+                        default => 'success',
+                    }),
+
                 TextColumn::make('satuan')
                     ->label('Satuan')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Pcs' => 'info',
-                        'Lusin' => 'warning',
-                        'Karton' => 'success',
-                        default => 'gray',
-                    }),
+                    ->color('gray'),
 
                 TextColumn::make('harga')
-                    ->label('Harga Retail')
+                    ->label('Harga Jual')
                     ->money('IDR')
                     ->sortable()
                     ->alignRight(),
@@ -56,27 +69,27 @@ class ProduksTable
                     ->money('IDR')
                     ->sortable()
                     ->alignRight()
-                    ->toggleable(),
-
-                TextColumn::make('stok_di_gudang_count')
-                    ->label('Tersedia di')
-                    ->counts('stokDiGudang')
-                    ->suffix(' gudang')
-                    ->badge()
-                    ->color('success'),
-
-                TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('stok_di_gudang_sum_stok')
+                    ->label('Total Stok')
+                    ->sum('stokDiGudang', 'stok')
+                    ->numeric()
+                    ->badge()
+                    ->color('primary'),
             ])
             ->filters([
+                SelectFilter::make('kategori_barang')
+                    ->label('Kategori Gudang')
+                    ->options(Produk::KATEGORI_OPTIONS),
                 SelectFilter::make('satuan')
                     ->options([
                         'Pcs' => 'Pcs',
-                        'Lusin' => 'Lusin',
-                        'Karton' => 'Karton',
+                        'Bal' => 'Bal',
+                        'Koli' => 'Koli',
+                        'Lembar' => 'Lembar',
+                        'Box' => 'Box',
+                        'Unit' => 'Unit',
                     ]),
             ])
             ->defaultSort('nama_produk')
@@ -90,8 +103,8 @@ class ProduksTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->emptyStateHeading('Belum ada produk')
-            ->emptyStateDescription('Tambahkan produk pertama untuk mulai mengelola katalog.')
+            ->emptyStateHeading('Belum ada data barang')
+            ->emptyStateDescription('Tambahkan barang styrofoam, aset perusahaan, atau perlengkapan gudang.')
             ->emptyStateIcon('heroicon-o-cube');
     }
 }

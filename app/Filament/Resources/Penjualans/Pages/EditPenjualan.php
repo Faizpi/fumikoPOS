@@ -179,6 +179,7 @@ class EditPenjualan extends EditRecord
         $data['items'] = collect($totals['items'])
             ->map(fn (array $item, int $index): array => array_merge($items[$index], [
                 'produk_id' => $item['produk_id'],
+                'ukuran' => $items[$index]['ukuran'] ?? ($produks->get($item['produk_id'])?->ukuran ?? null),
                 'deskripsi' => $item['deskripsi'],
                 'kuantitas' => $item['kuantitas'],
                 'unit' => $item['unit'],

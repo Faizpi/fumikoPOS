@@ -500,11 +500,11 @@
 </style>
 
 <div class="he-auth-shell">
-    <section class="he-auth-brand" aria-label="Hibiscus Efsya POS">
+    <section class="he-auth-brand" aria-label="Fumiko POS">
         <div class="he-brand-mark">
-            <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
+            <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam">
             <div>
-                <div class="he-brand-name">Hibiscus Efsya POS</div>
+                <div class="he-brand-name">Fumiko POS</div>
                 <div class="he-brand-caption">Customer Invoice & Transaction Portal</div>
             </div>
         </div>
@@ -543,9 +543,9 @@
     <section class="he-auth-form-side" aria-label="Login form">
         <div class="he-auth-panel">
             <div class="he-mobile-logo">
-                <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
+                <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam">
                 <div>
-                    <div class="he-brand-name he-mobile-brand-name">Hibiscus Efsya POS</div>
+                    <div class="he-brand-name he-mobile-brand-name">Fumiko POS</div>
                     <div class="he-brand-caption he-mobile-brand-caption">Secure customer access</div>
                 </div>
             </div>

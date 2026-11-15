@@ -25,58 +25,74 @@ class KontaksTable
                     ->badge()
                     ->color('gray')
                     ->copyable()
-                    ->placeholder('—'),
+                    ->placeholder('-'),
 
-                TextColumn::make('nama')
-                    ->label('Nama')
+                TextColumn::make('nama_toko')
+                    ->label('Nama Toko')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->placeholder('-'),
+
+                TextColumn::make('nama')
+                    ->label('Nama Pembeli / Kontak')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('tipe_kontak')
+                    ->label('Tipe')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'supplier' => 'Supplier',
+                        'keduanya' => 'Customer & Supplier',
+                        default => 'Customer',
+                    })
+                    ->color(fn (?string $state): string => match ($state) {
+                        'supplier' => 'warning',
+                        'keduanya' => 'info',
+                        default => 'success',
+                    }),
 
                 TextColumn::make('no_telp')
-                    ->label('No. Telp')
+                    ->label('No. HP')
                     ->searchable()
                     ->copyable()
-                    ->placeholder('—')
+                    ->placeholder('-')
                     ->icon('heroicon-o-phone')
                     ->formatStateUsing(fn ($state) => \receipt_format_phone($state)),
 
-                TextColumn::make('email')
-                    ->label('Email')
+                TextColumn::make('alamat')
+                    ->label('Alamat')
                     ->searchable()
-                    ->placeholder('—')
-                    ->icon('heroicon-o-envelope')
-                    ->toggleable(),
+                    ->limit(40)
+                    ->placeholder('-'),
 
                 TextColumn::make('gudang.nama_gudang')
                     ->label('Gudang')
-                    ->placeholder('—')
+                    ->placeholder('-')
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('diskon_persen')
                     ->label('Diskon')
                     ->suffix('%')
                     ->alignRight()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('creator.name')
                     ->label('Dibuat oleh')
-                    ->placeholder('—')
-                    ->toggleable(),
-
-                TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y')
-                    ->sortable()
+                    ->placeholder('-')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('gudang_id')
-                    ->label('Gudang')
-                    ->relationship('gudang', 'nama_gudang')
-                    ->searchable()
-                    ->preload(),
+                SelectFilter::make('tipe_kontak')
+                    ->label('Tipe Kontak')
+                    ->options([
+                        'customer' => 'Customer / Pembeli',
+                        'supplier' => 'Supplier / Pemasok',
+                        'keduanya' => 'Customer & Supplier',
+                    ]),
             ])
             ->defaultSort('nama')
             ->recordActions([
@@ -90,7 +106,7 @@ class KontaksTable
                 ]),
             ])
             ->emptyStateHeading('Belum ada kontak')
-            ->emptyStateDescription('Tambahkan kontak (customer atau supplier) untuk mulai transaksi.')
+            ->emptyStateDescription('Tambahkan data pembeli/toko atau supplier untuk mulai transaksi.')
             ->emptyStateIcon('heroicon-o-identification');
     }
 }

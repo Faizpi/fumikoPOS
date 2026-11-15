@@ -20,6 +20,8 @@ use UnitEnum;
 
 class CashBankAccountResource extends Resource
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $model = CashBankAccount::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';

@@ -93,6 +93,11 @@ class PembelianForm
                             ->label('No Referensi')
                             ->maxLength(255),
 
+                        TextInput::make('no_surat_jalan')
+                            ->label('No. Surat Jalan Supplier')
+                            ->placeholder('Contoh: SJ-SUP-001')
+                            ->maxLength(255),
+
                         TextInput::make('no_resi')
                             ->label('Nomor Resi')
                             ->maxLength(255),
@@ -221,6 +226,7 @@ class PembelianForm
                                         if ($produk) {
                                             $set('kuantitas', 0);
                                             $set('unit', $produk->satuan);
+                                            $set('ukuran', $produk->ukuran);
                                             $set('harga_satuan', (float) $produk->harga);
                                         }
                                         self::recalcRow($set, $get);
@@ -250,6 +256,12 @@ class PembelianForm
                                     ->label('Unit')
                                     ->disabled()
                                     ->dehydrated()
+                                    ->columnSpan(['default' => 1, 'md' => 2]),
+
+                                TextInput::make('ukuran')
+                                    ->label('Ukuran')
+                                    ->placeholder('40x25x20 cm')
+                                    ->maxLength(100)
                                     ->columnSpan(['default' => 1, 'md' => 3]),
 
                                 TextInput::make('harga_satuan')

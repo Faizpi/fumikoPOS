@@ -9,6 +9,8 @@ class Kontak extends Authenticatable
     protected $fillable = [
         'kode_kontak',
         'nama',
+        'nama_toko',
+        'tipe_kontak',
         'email',
         'no_telp',
         'pin',

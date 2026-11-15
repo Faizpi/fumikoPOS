@@ -21,6 +21,8 @@ class KunjunganResource extends Resource
 {
     use ScopeByRole;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $model = Kunjungan::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-map-pin';

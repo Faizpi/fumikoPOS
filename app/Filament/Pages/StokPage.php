@@ -28,11 +28,13 @@ class StokPage extends Page
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationLabel = 'Stok';
+    protected static ?string $navigationLabel = 'Posisi Stok Gudang';
 
-    protected static ?string $title = 'Manajemen Stok';
+    protected static ?string $title = 'Posisi Stok Bahan & Aset Gudang';
 
     protected string $view = 'filament.pages.stok';
+
+    public ?string $filter_kategori = 'semua';
 
     // Form state for manual stok update (super_admin)
     public ?int $form_gudang_id = null;

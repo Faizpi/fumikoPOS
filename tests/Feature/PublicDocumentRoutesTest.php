@@ -34,7 +34,7 @@ class PublicDocumentRoutesTest extends TestCase
 
         $this->get(route('public.struk.show', ['type' => 'penjualan', 'uuid' => $penjualan->uuid]))
             ->assertOk()
-            ->assertSee('HIBISCUS EFSYA')
+            ->assertSee('FUMIKO STYROFOAM')
             ->assertSee('Periksa Invoice & Ambil Promo !', false)
             ->assertSee('size: auto', false)
             ->assertSee('margin: 0 auto', false)

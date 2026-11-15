@@ -56,21 +56,23 @@ class StockOpnameForm
                             ->label('')
                             ->schema([
                                 Select::make('produk_id')
-                                    ->label('Produk')
+                                    ->label('Barang / Aset Gudang')
                                     ->required()
                                     ->options(function (callable $get) {
                                         $user = auth()->user();
-                                        if ($user?->isSuperAdmin()) {
-                                            return Produk::orderBy('nama_produk')->pluck('nama_produk', 'id');
-                                        }
-                                        $gudangId = $get('../../gudang_id') ?? $user?->getCurrentGudang()?->id;
-                                        if (! $gudangId) {
-                                            return [];
+                                        $query = Produk::orderBy('nama_produk');
+                                        if (! $user?->isSuperAdmin()) {
+                                            $gudangId = $get('../../gudang_id') ?? $user?->getCurrentGudang()?->id;
+                                            if ($gudangId) {
+                                                $query->whereHas('stokDiGudang', function ($q) use ($gudangId) {
+                                                    $q->where('gudang_id', $gudangId);
+                                                });
+                                            }
                                         }
 
-                                        return Produk::whereHas('stokDiGudang', function ($query) use ($gudangId) {
-                                            $query->where('gudang_id', $gudangId);
-                                        })->orderBy('nama_produk')->pluck('nama_produk', 'id');
+                                        return $query->get()->mapWithKeys(fn (Produk $p) => [
+                                            $p->id => "[{$p->kategori_label}] {$p->nama_dengan_ukuran}",
+                                        ]);
                                     })
                                     ->searchable()
                                     ->columnSpan(['default' => 1, 'md' => 5])

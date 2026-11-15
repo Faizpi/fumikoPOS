@@ -60,7 +60,7 @@ class WhatsappNotificationService
 
             // Pesan untuk Customer
             $msgCustomer = "Halo *{$penjualan->pelanggan}*!\n\n"
-                ."Terima kasih telah berbelanja di *Hibiscus Efsya*.\n"
+                ."Terima kasih telah berbelanja di *Fumiko Styrofoam*.\n"
                 ."Berikut ringkasan pesanan Anda:\n\n"
                 ."No. Invoice : {$nomor}\n"
                 ."Tanggal     : {$tgl}\n"

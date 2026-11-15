@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Gudang;
+use App\Models\Pembayaran;
 use App\Models\Pembelian;
 use App\Services\Accounting\AccountingReportService;
 use App\Services\Accounting\HutangLedgerService;
@@ -51,14 +52,14 @@ class HutangPage extends Page
     public function mount(): void
     {
         $this->filter_from = now()->startOfYear()->format('Y-m-d');
-        $this->filter_to = now()->format('Y-m-d');
+        $this->filter_to = now()->addMonths(3)->format('Y-m-d');
     }
 
     public static function canAccess(): bool
     {
         $user = Auth::user();
 
-        return in_array($user?->role, ['spectator', 'super_admin']);
+        return in_array($user?->role, ['admin', 'spectator', 'super_admin']);
     }
 
     public function getChartData(): array
@@ -107,7 +108,7 @@ class HutangPage extends Page
 
     public function getListTempo(): LengthAwarePaginator
     {
-        $query = Pembelian::with(['gudang', 'kontak'])
+        $query = Pembelian::with(['gudang', 'kontak', 'penerimaanBarangs'])
             ->whereIn('status', ['Approved', 'Lunas'])
             ->whereNotNull('tgl_jatuh_tempo');
 
@@ -126,35 +127,14 @@ class HutangPage extends Page
             ->onEachSide(0);
 
         $ledger = app(HutangLedgerService::class);
-        $paginator->setCollection($paginator->getCollection()->map(function ($p) use ($ledger) {
-            $mutations = $ledger->mutationsForPurchase($p);
-            $latestMutation = $mutations->last();
-            $sisa = $latestMutation['running_balance'] ?? '0.00';
-            $totalBayar = bcsub((string) $p->grand_total, $sisa, 2);
-
-            return [
-                'nomor' => $p->custom_number,
-                'supplier' => $p->kontak?->nama ?? '—',
-                'gudang' => $p->gudang?->nama_gudang,
-                'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
-                'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
-                'grand_total' => $p->grand_total,
-                'sudah_bayar' => $totalBayar,
-                'sisa' => $sisa,
-                'debit' => $latestMutation['debit'] ?? '0.00',
-                'credit' => $latestMutation['credit'] ?? '0.00',
-                'saldo' => $latestMutation['running_balance'] ?? '0.00',
-                'journal_number' => $latestMutation['journal_number'] ?? null,
-                'status' => $p->status,
-            ];
-        }));
+        $paginator->setCollection($paginator->getCollection()->map(fn ($p) => $this->mapPurchaseRow($p, $ledger)));
 
         return $paginator;
     }
 
     public function getListTempoAll(): Collection
     {
-        $query = Pembelian::with(['gudang', 'kontak'])
+        $query = Pembelian::with(['gudang', 'kontak', 'penerimaanBarangs'])
             ->whereIn('status', ['Approved', 'Lunas'])
             ->whereNotNull('tgl_jatuh_tempo');
 
@@ -170,28 +150,49 @@ class HutangPage extends Page
 
         $ledger = app(HutangLedgerService::class);
 
-        return $query->orderBy('tgl_jatuh_tempo')->get()->map(function ($p) use ($ledger) {
-            $mutations = $ledger->mutationsForPurchase($p);
-            $latestMutation = $mutations->last();
-            $sisa = $latestMutation['running_balance'] ?? '0.00';
-            $totalBayar = bcsub((string) $p->grand_total, $sisa, 2);
+        return $query->orderBy('tgl_jatuh_tempo')->get()->map(fn ($p) => $this->mapPurchaseRow($p, $ledger));
+    }
 
-            return [
-                'nomor' => $p->custom_number,
-                'supplier' => $p->kontak?->nama ?? '—',
-                'gudang' => $p->gudang?->nama_gudang,
-                'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
-                'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
-                'grand_total' => $p->grand_total,
-                'sudah_bayar' => $totalBayar,
-                'sisa' => $sisa,
-                'debit' => $latestMutation['debit'] ?? '0.00',
-                'credit' => $latestMutation['credit'] ?? '0.00',
-                'saldo' => $latestMutation['running_balance'] ?? '0.00',
-                'journal_number' => $latestMutation['journal_number'] ?? null,
-                'status' => $p->status,
-            ];
-        });
+    /** @return array<string, mixed> */
+    private function mapPurchaseRow(Pembelian $p, HutangLedgerService $ledger): array
+    {
+        $mutations = $ledger->mutationsForPurchase($p);
+        $latestMutation = $mutations->last();
+
+        if ($latestMutation) {
+            $sisa = $latestMutation['running_balance'];
+            $totalBayar = bcsub((string) $p->grand_total, (string) $sisa, 2);
+        } else {
+            $sudahBayar = (float) Pembayaran::where('type', 'hutang')
+                ->where('pembelian_id', $p->id)
+                ->where('status', 'Approved')
+                ->sum('jumlah_bayar');
+            $sisaFloat = $p->status === 'Lunas' ? 0.0 : max(0.0, (float) $p->grand_total - $sudahBayar);
+            $sisa = number_format($sisaFloat, 2, '.', '');
+            $totalBayar = number_format($sudahBayar, 2, '.', '');
+        }
+
+        $sjPenerimaan = $p->penerimaanBarangs
+            ? $p->penerimaanBarangs->pluck('no_surat_jalan')->filter()->unique()->implode(', ')
+            : '';
+        $noSuratJalan = $p->no_surat_jalan ?: ($sjPenerimaan ?: '-');
+
+        return [
+            'nomor' => $p->custom_number,
+            'no_surat_jalan' => $noSuratJalan,
+            'supplier' => $p->kontak?->nama ?? '-',
+            'gudang' => $p->gudang?->nama_gudang,
+            'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
+            'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
+            'grand_total' => $p->grand_total,
+            'sudah_bayar' => $totalBayar,
+            'sisa' => $sisa,
+            'debit' => $latestMutation['debit'] ?? '0.00',
+            'credit' => $latestMutation['credit'] ?? '0.00',
+            'saldo' => $latestMutation['running_balance'] ?? $sisa,
+            'journal_number' => $latestMutation['journal_number'] ?? null,
+            'status' => $p->status,
+        ];
     }
 
     protected function getHeaderActions(): array

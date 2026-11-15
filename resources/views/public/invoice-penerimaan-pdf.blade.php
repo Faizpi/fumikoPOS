@@ -141,7 +141,7 @@
 
     <div class="receipt">
         <div class="header">
-            <img src="{{ public_path('assets/img/logoHE1.png') }}" class="logo" alt="Logo">
+            <img src="{{ public_path('assets/img/logo-fumiko.jpg') }}" class="logo" alt="Logo">
             <div class="title">PENERIMAAN BARANG</div>
         </div>
 
@@ -260,7 +260,7 @@
         </div>
 
         <div class="footer">
-            <p>marketing@hibiscusefsya.com</p>
+            <p>admin@fumiko.com</p>
             <p>-- Terima Kasih --</p>
         </div>
     </div>

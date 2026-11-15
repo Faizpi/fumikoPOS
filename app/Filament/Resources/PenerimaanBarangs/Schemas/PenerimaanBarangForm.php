@@ -93,7 +93,7 @@ class PenerimaanBarangForm
                                         return false;
                                     })
                                     ->mapWithKeys(fn ($p) => [
-                                        $p->id => $p->nomor.($p->kontak ? ' — '.$p->kontak->nama : ''),
+                                        $p->id => $p->nomor.($p->kontak ? ' - '.$p->kontak->nama : '').($p->no_surat_jalan ? " [SJ: {$p->no_surat_jalan}]" : ''),
                                     ]);
                             })
                             ->live()
@@ -106,10 +106,15 @@ class PenerimaanBarangForm
                                 }
 
                                 $newItems = [];
+                                $firstSuratJalan = null;
                                 foreach ((array) $state as $pembelianId) {
                                     $pembelian = Pembelian::with('items.produk')->find($pembelianId);
                                     if (! $pembelian) {
                                         continue;
+                                    }
+
+                                    if ($firstSuratJalan === null && ! empty($pembelian->no_surat_jalan)) {
+                                        $firstSuratJalan = $pembelian->no_surat_jalan;
                                     }
 
                                     foreach ($pembelian->items as $item) {
@@ -139,6 +144,9 @@ class PenerimaanBarangForm
                                 }
 
                                 $set('items', $newItems);
+                                if ($firstSuratJalan && empty($get('no_surat_jalan'))) {
+                                    $set('no_surat_jalan', $firstSuratJalan);
+                                }
                             })
                             ->columnSpanFull(),
 

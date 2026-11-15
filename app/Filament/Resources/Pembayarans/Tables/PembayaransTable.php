@@ -21,8 +21,9 @@ class PembayaransTable
             ->columns([
                 TextColumn::make('tgl_pembayaran')->label('Tanggal')->date('d/m/Y')->sortable(),
                 TextColumn::make('nomor')->label('Nomor')->searchable()->weight('bold'),
-                TextColumn::make('penjualan.nomor')->label('Invoice')->placeholder('—'),
-                TextColumn::make('penjualan.pelanggan')->label('Pelanggan'),
+                TextColumn::make('penjualan.nomor')->label('Invoice')->placeholder('-'),
+                TextColumn::make('penjualan.nama_toko')->label('Nama Toko')->placeholder('-')->searchable(),
+                TextColumn::make('penjualan.pelanggan')->label('Pembeli')->placeholder('-')->searchable(),
                 TextColumn::make('metode_pembayaran')->label('Metode')->badge()->color('info'),
                 TextColumn::make('jumlah_bayar')->label('Jumlah')->money('IDR')->alignRight()->weight('bold'),
                 TextColumn::make('status')

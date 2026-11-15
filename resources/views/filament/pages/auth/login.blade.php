@@ -1,19 +1,17 @@
 <div class="he-auth-root">
 <style>
     body:has(.he-auth-root) {
-        overflow: hidden;
+        overflow-x: hidden;
         background: #f8fafc;
     }
 
     .dark body:has(.he-auth-root),
     body.dark:has(.he-auth-root) {
-        background: #020617;
+        background: #090c10;
     }
 
     .fi-simple-layout {
-        height: 100svh !important;
         min-height: 100svh !important;
-        overflow: hidden !important;
         padding: 0 !important;
         background: transparent !important;
         border-radius: 0 !important;
@@ -28,50 +26,48 @@
         display: block !important;
         width: 100% !important;
         max-width: none !important;
-        height: 100svh !important;
         min-height: 100svh !important;
         margin: 0 !important;
         padding: 0 !important;
-        overflow: hidden !important;
     }
 
     .he-auth-root {
-        --he-primary: #2563eb;
-        --he-primary-hover: #1d4ed8;
-        --he-panel-bg: #ffffff;
-        --he-panel-text: #0f172a;
-        --he-muted: #64748b;
-        --he-border: #e2e8f0;
-        --he-input-bg: #ffffff;
-        --he-placeholder: #94a3b8;
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        background: var(--he-panel-bg);
-        color: var(--he-panel-text);
-        border-radius: 0 !important;
+        --fm-primary: #92400e;
+        --fm-primary-hover: #78350f;
+        --fm-gold: #eab308;
+        --fm-panel-bg: #ffffff;
+        --fm-panel-text: #0f172a;
+        --fm-muted: #475569;
+        --fm-border: #cbd5e1;
+        --fm-input-bg: #ffffff;
+        --fm-placeholder: #64748b;
+        --fm-demo-bg: #f8fafc;
+        --fm-demo-hover: #fef3c7;
+        width: 100%;
+        min-height: 100svh;
+        background: var(--fm-panel-bg);
+        color: var(--fm-panel-text);
     }
 
     .dark .he-auth-root {
-        --he-panel-bg: #020617;
-        --he-panel-text: #f8fafc;
-        --he-muted: #94a3b8;
-        --he-border: #334155;
-        --he-input-bg: #0f172a;
-        --he-placeholder: #64748b;
+        --fm-primary: #d97706;
+        --fm-primary-hover: #b45309;
+        --fm-panel-bg: #0b0f17;
+        --fm-panel-text: #f8fafc;
+        --fm-muted: #cbd5e1;
+        --fm-border: #334155;
+        --fm-input-bg: #111827;
+        --fm-placeholder: #94a3b8;
+        --fm-demo-bg: #111827;
+        --fm-demo-hover: #1e293b;
     }
 
     .he-auth-shell {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(400px, .82fr);
+        grid-template-columns: minmax(0, 1.05fr) minmax(400px, .95fr);
         width: 100%;
-        height: 100%;
-        min-height: 0;
-        overflow: hidden;
-        background: var(--he-panel-bg);
-        border-radius: 0 !important;
+        min-height: 100svh;
+        background: var(--fm-panel-bg);
     }
 
     .he-auth-brand {
@@ -81,13 +77,11 @@
         justify-content: space-between;
         gap: 28px;
         min-width: 0;
-        padding: 48px 56px;
+        padding: 44px 52px;
         overflow: hidden;
-        border-radius: 0 !important;
-        background:
-            linear-gradient(135deg, rgba(15, 70, 217, .96) 0%, rgba(37, 99, 235, .94) 38%, rgba(124, 58, 237, .9) 68%, rgba(236, 72, 153, .92) 100%),
-            #1d4ed8;
-        color: #ffffff;
+        background: radial-gradient(circle at top right, #231c10 0%, #0d1016 58%, #07090d 100%);
+        color: #f8fafc;
+        border-right: 1px solid rgba(234, 179, 8, .22);
     }
 
     .he-auth-brand::before {
@@ -95,10 +89,10 @@
         position: absolute;
         inset: 0;
         background:
-            linear-gradient(rgba(255, 255, 255, .11) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, .11) 1px, transparent 1px);
+            linear-gradient(rgba(234, 179, 8, .08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(234, 179, 8, .08) 1px, transparent 1px);
         background-size: 40px 40px;
-        mask-image: linear-gradient(120deg, rgba(0, 0, 0, .76), transparent 72%);
+        mask-image: linear-gradient(135deg, rgba(0, 0, 0, .75), transparent 72%);
         pointer-events: none;
     }
 
@@ -116,73 +110,46 @@
 
     .he-brand-mark img,
     .he-mobile-logo img {
-        width: 46px;
-        height: 46px;
+        width: 84px;
+        height: 48px;
         border-radius: 8px;
-        background: #ffffff;
-        object-fit: contain;
-        padding: 5px;
-        box-shadow: 0 14px 34px rgba(15, 23, 42, .22);
+        background: #090b0f;
+        object-fit: cover;
+        border: 1px solid rgba(234, 179, 8, .45);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
     }
 
     .he-brand-name {
-        color: #ffffff;
-        font-size: 16px;
+        color: #f8fafc;
+        font-size: 17px;
         font-weight: 800;
         line-height: 1.15;
-        letter-spacing: 0;
     }
 
     .he-brand-caption {
         margin-top: 3px;
-        color: rgba(255, 255, 255, .78);
+        color: #f5d078;
         font-size: 12px;
-        font-weight: 650;
-        letter-spacing: 0;
+        font-weight: 600;
     }
 
     .he-auth-copy {
         max-width: 560px;
     }
 
-    .he-auth-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 16px;
-        padding: 7px 10px;
-        border: 1px solid rgba(255, 255, 255, .28);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .13);
-        color: rgba(255, 255, 255, .92);
-        font-size: 12px;
-        font-weight: 750;
-        letter-spacing: 0;
-    }
-
-    .he-auth-kicker::before {
-        content: "";
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: #22c55e;
-        box-shadow: 0 0 0 4px rgba(34, 197, 94, .2);
-    }
-
     .he-auth-title {
         max-width: 560px;
         margin: 0;
         color: #ffffff;
-        font-size: 50px;
+        font-size: 44px;
         font-weight: 850;
-        line-height: 1;
-        letter-spacing: 0;
+        line-height: 1.06;
     }
 
     .he-auth-text {
-        max-width: 500px;
-        margin: 18px 0 0;
-        color: rgba(255, 255, 255, .86);
+        max-width: 520px;
+        margin: 16px 0 0;
+        color: #e2e8f0;
         font-size: 15px;
         line-height: 1.6;
     }
@@ -190,21 +157,20 @@
     .he-feature-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+        gap: 12px;
         max-width: 640px;
     }
 
     .he-feature {
         min-height: 86px;
-        padding: 13px;
-        border: 1px solid rgba(255, 255, 255, .2);
+        padding: 14px;
+        border: 1px solid rgba(234, 179, 8, .25);
         border-radius: 8px;
-        background: rgba(255, 255, 255, .12);
-        backdrop-filter: blur(10px);
+        background: rgba(17, 24, 39, .78);
     }
 
     .he-feature-index {
-        color: rgba(255, 255, 255, .66);
+        color: #f5d078;
         font-size: 11px;
         font-weight: 800;
         line-height: 1;
@@ -220,9 +186,9 @@
 
     .he-feature-text {
         margin-top: 5px;
-        color: rgba(255, 255, 255, .78);
+        color: #cbd5e1;
         font-size: 12px;
-        line-height: 1.42;
+        line-height: 1.45;
     }
 
     .he-auth-form-side {
@@ -230,50 +196,47 @@
         align-items: center;
         justify-content: center;
         min-width: 0;
-        padding: 42px 44px;
-        overflow: hidden;
-        background: var(--he-panel-bg);
+        padding: 36px 40px;
+        background: var(--fm-panel-bg);
     }
 
     .he-auth-panel {
-        width: min(100%, 420px);
+        width: min(100%, 460px);
     }
 
     .he-mobile-logo {
         display: none;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
 
     .he-mobile-brand-name {
-        color: var(--he-panel-text);
+        color: var(--fm-panel-text);
     }
 
     .he-mobile-brand-caption {
-        color: var(--he-muted);
+        color: var(--fm-primary);
     }
 
     .he-form-eyebrow {
-        color: var(--he-primary);
+        color: var(--fm-primary);
         font-size: 12px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0;
     }
 
     .he-form-title {
-        margin: 10px 0 0;
-        color: var(--he-panel-text);
-        font-size: 29px;
+        margin: 8px 0 0;
+        color: var(--fm-panel-text);
+        font-size: 28px;
         font-weight: 850;
         line-height: 1.16;
-        letter-spacing: 0;
     }
 
     .he-form-subtitle {
-        margin: 10px 0 24px;
-        color: var(--he-muted);
+        margin: 8px 0 20px;
+        color: var(--fm-muted);
         font-size: 14px;
-        line-height: 1.55;
+        line-height: 1.5;
     }
 
     .he-login-card {
@@ -281,67 +244,62 @@
     }
 
     .he-login-card .fi-fo {
-        gap: 16px;
+        gap: 14px;
     }
 
     .he-login-card .fi-fo-field-wrp-label,
     .he-login-card .fi-fo-field-wrp-label span,
     .he-login-card label {
-        color: var(--he-panel-text) !important;
+        color: var(--fm-panel-text) !important;
         opacity: 1 !important;
         visibility: visible !important;
     }
 
     .he-login-card .fi-fo-field-wrp-label .fi-fo-field-wrp-required-mark {
-        color: #ec4899 !important;
+        color: #dc2626 !important;
     }
 
     .he-login-card .fi-fo-field-wrp-error-message {
-        color: #ef4444 !important;
+        color: #dc2626 !important;
     }
 
     .he-login-card .fi-input-wrp {
-        border: 1px solid var(--he-border) !important;
+        border: 1px solid var(--fm-border) !important;
         border-radius: 8px !important;
-        background: var(--he-input-bg) !important;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, .05) !important;
+        background: var(--fm-input-bg) !important;
     }
 
     .he-login-card .fi-input-wrp:focus-within {
-        border-color: var(--he-primary) !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, .14) !important;
+        border-color: var(--fm-primary) !important;
+        box-shadow: 0 0 0 3px rgba(146, 64, 14, .18) !important;
     }
 
     .he-login-card .fi-input,
     .he-login-card input {
-        color: var(--he-panel-text) !important;
-        caret-color: var(--he-primary);
+        color: var(--fm-panel-text) !important;
+        caret-color: var(--fm-primary);
         background: transparent !important;
     }
 
     .he-login-card .fi-input::placeholder,
     .he-login-card input::placeholder {
-        color: var(--he-placeholder) !important;
+        color: var(--fm-placeholder) !important;
         opacity: 1;
     }
 
     .he-login-card .fi-icon-btn,
     .he-login-card .fi-input-wrp-icon {
-        color: var(--he-muted) !important;
+        color: var(--fm-muted) !important;
     }
 
     .he-login-card .fi-checkbox-input {
-        border-color: var(--he-border) !important;
-        background: var(--he-input-bg) !important;
+        border-color: var(--fm-border) !important;
+        background: var(--fm-input-bg) !important;
     }
 
     .he-login-card .fi-checkbox-input:checked {
-        border-color: var(--he-primary) !important;
-        background-color: var(--he-primary) !important;
-    }
-
-    .he-login-card a {
-        color: var(--he-primary) !important;
+        border-color: var(--fm-primary) !important;
+        background-color: var(--fm-primary) !important;
     }
 
     .he-login-card .fi-btn,
@@ -349,128 +307,129 @@
         min-height: 44px;
         border: 0 !important;
         border-radius: 8px !important;
-        background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+        background: linear-gradient(135deg, #92400e, #b45309) !important;
         color: #ffffff !important;
         font-weight: 800;
-        box-shadow: 0 12px 24px rgba(37, 99, 235, .22) !important;
+        box-shadow: 0 10px 20px rgba(146, 64, 14, .22) !important;
     }
 
     .he-login-card .fi-btn:hover,
     .he-login-card .fi-btn.fi-color-primary:hover {
-        background: linear-gradient(135deg, #1d4ed8, #2563eb) !important;
+        background: linear-gradient(135deg, #78350f, #92400e) !important;
     }
 
     .he-login-card .fi-btn-label {
         color: #ffffff !important;
     }
 
-    .he-auth-support {
+    .fm-demo-box {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--fm-border);
+    }
+
+    .fm-demo-heading {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
-        margin-top: 22px;
-        padding-top: 16px;
-        border-top: 1px solid var(--he-border);
-        color: var(--he-muted);
-        font-size: 12px;
-        line-height: 1.45;
+        gap: 8px;
+        margin-bottom: 10px;
     }
 
-    .he-auth-support strong {
-        display: block;
-        color: var(--he-panel-text);
+    .fm-demo-title {
+        color: var(--fm-panel-text);
         font-size: 13px;
+        font-weight: 800;
     }
 
-    .he-status-pill {
-        flex: none;
-        padding: 6px 9px;
+    .fm-demo-badge {
+        padding: 3px 8px;
         border-radius: 999px;
-        background: rgba(37, 99, 235, .1);
-        color: var(--he-primary);
+        background: #92400e;
+        color: #ffffff;
         font-size: 11px;
+        font-weight: 700;
+    }
+
+    .fm-demo-list {
+        display: grid;
+        gap: 8px;
+    }
+
+    .fm-demo-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 12px;
+        border: 1px solid var(--fm-border);
+        border-radius: 8px;
+        background: var(--fm-demo-bg);
+        color: var(--fm-panel-text);
+        text-align: left;
+        cursor: pointer;
+        transition: border-color .15s ease, background-color .15s ease;
+    }
+
+    .fm-demo-btn:hover,
+    .fm-demo-btn:focus-visible {
+        border-color: var(--fm-primary);
+        background: var(--fm-demo-hover);
+        outline: 2px solid var(--fm-primary);
+        outline-offset: 1px;
+    }
+
+    .fm-demo-role {
+        font-size: 13px;
         font-weight: 800;
+        color: var(--fm-panel-text);
+        line-height: 1.25;
+    }
+
+    .fm-demo-meta {
+        margin-top: 2px;
+        font-size: 11.5px;
+        color: var(--fm-muted);
+        line-height: 1.35;
+    }
+
+    .fm-demo-cta {
+        flex: none;
+        padding: 5px 10px;
+        border-radius: 6px;
+        background: #92400e;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
     }
 
     @media (max-width: 1280px) {
         .he-auth-brand {
-            padding: 40px 44px;
-        }
-
-        .he-auth-title {
-            font-size: 44px;
-        }
-
-        .he-auth-text {
-            font-size: 14px;
-        }
-    }
-
-    @media (max-height: 760px) and (min-width: 921px) {
-        .he-auth-brand {
-            padding: 30px 42px;
-            gap: 20px;
-        }
-
-        .he-brand-mark img,
-        .he-mobile-logo img {
-            width: 40px;
-            height: 40px;
-        }
-
-        .he-auth-title {
-            font-size: 40px;
-        }
-
-        .he-auth-text {
-            margin-top: 14px;
-        }
-
-        .he-feature {
-            min-height: 78px;
-            padding: 11px;
-        }
-
-        .he-auth-form-side {
-            padding: 30px 38px;
-        }
-    }
-
-    @media (max-width: 920px) {
-        body:has(.he-auth-root) {
-            overflow: auto;
-        }
-
-        .fi-simple-layout,
-        .fi-simple-main-ctn,
-        .fi-simple-main,
-        .he-auth-root {
-            height: auto !important;
-            min-height: 100svh !important;
-            overflow: auto !important;
-        }
-
-        .he-auth-shell {
-            grid-template-columns: 1fr;
-            height: auto;
-            min-height: 100svh;
-            overflow: visible;
-        }
-
-        .he-auth-brand {
-            min-height: auto;
-            padding: 30px 28px;
+            padding: 36px 40px;
         }
 
         .he-auth-title {
             font-size: 38px;
         }
+    }
+
+    @media (max-width: 920px) {
+        .he-auth-shell {
+            grid-template-columns: 1fr;
+        }
+
+        .he-auth-brand {
+            padding: 28px 24px;
+        }
+
+        .he-auth-title {
+            font-size: 32px;
+        }
 
         .he-auth-form-side {
-            align-items: flex-start;
-            padding: 34px 24px;
-            overflow: visible;
+            padding: 28px 20px;
         }
     }
 
@@ -479,91 +438,97 @@
             display: none;
         }
 
-        .he-auth-form-side {
-            min-height: 100svh;
-            padding: 28px 20px;
-        }
-
         .he-mobile-logo {
             display: flex;
         }
 
         .he-form-title {
-            font-size: 26px;
-        }
-
-        .he-auth-support {
-            align-items: flex-start;
-            flex-direction: column;
+            font-size: 24px;
         }
     }
 </style>
 
 <div class="he-auth-shell">
-    <section class="he-auth-brand" aria-label="Hibiscus Efsya POS">
+    <section class="he-auth-brand" aria-label="Fumiko POS">
         <div class="he-brand-mark">
-            <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
+            <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Logo Fumiko Styrofoam">
             <div>
-                <div class="he-brand-name">Hibiscus Efsya POS</div>
-                <div class="he-brand-caption">Sales, inventory, and approval workspace</div>
+                <div class="he-brand-name">Fumiko POS</div>
+                <div class="he-brand-caption">Designed for life, Built to Last</div>
             </div>
         </div>
 
         <div class="he-auth-copy">
-            <h1 class="he-auth-title">Kelola Keuangan Bisnis Lebih Cepat dan Akurat.</h1>
+            <h1 class="he-auth-title">Kontrol Gudang, Tagihan & Uang Kas Fumiko.</h1>
             <p class="he-auth-text">
-                Jurnal Hibiscus Efsya membantu Anda mengelola pencatatan transaksi, pembukuan arus kas, hingga laporan bulanan secara otomatis. Pantau bisnis Anda secara real-time kapan pun dan di mana pun melalui satu dashboard terpusat.
+                Sistem operasional terpadu untuk pencatatan barang keluar, cetak Faktur & Surat Jalan ukuran A5, stock opname gudang, pemantauan tagihan di luar, hingga hutang surat jalan supplier.
             </p>
         </div>
 
-        <div class="he-feature-grid" aria-label="Fitur utama">
+        <div class="he-feature-grid" aria-label="Fitur utama Fumiko POS">
             <div class="he-feature">
                 <div class="he-feature-index">01</div>
-                <div class="he-feature-title">Real-time sales control</div>
-                <div class="he-feature-text">Invoice, payment, and approval status stay visible across every team role.</div>
+                <div class="he-feature-title">Barang Keluar & Cetak A5</div>
+                <div class="he-feature-text">Catat nama barang, ukuran pesanan, toko, pembeli & langsung cetak Faktur dan Surat Jalan A5.</div>
             </div>
             <div class="he-feature">
                 <div class="he-feature-index">02</div>
-                <div class="he-feature-title">Inventory visibility</div>
-                <div class="he-feature-text">Track warehouse stock, batch information, and goods receipt without switching tools.</div>
+                <div class="he-feature-title">Stock Opname Gudang</div>
+                <div class="he-feature-text">Pantau posisi harian bahan yang dijual, aset perusahaan, dan perlengkapan lain-lain.</div>
             </div>
             <div class="he-feature">
                 <div class="he-feature-index">03</div>
-                <div class="he-feature-title">Field visit workflow</div>
-                <div class="he-feature-text">Capture customer visits, coordinates, products, and notes in one operational flow.</div>
+                <div class="he-feature-title">Tagihan di Luar & Uang Kas</div>
+                <div class="he-feature-text">Lihat invoice belum lunas vs lunas, dan update uang kas otomatis saat pembayaran masuk.</div>
             </div>
             <div class="he-feature">
                 <div class="he-feature-index">04</div>
-                <div class="he-feature-title">Thermal-ready documents</div>
-                <div class="he-feature-text">Print invoices, receipts, and product cards for fast retail and field execution.</div>
+                <div class="he-feature-title">Surat Jalan Supplier</div>
+                <div class="he-feature-text">Samakan barang masuk gudang dengan nomor surat jalan supplier beserta posisi hutangnya.</div>
             </div>
         </div>
     </section>
 
-    <section class="he-auth-form-side" aria-label="Login form">
+    <section class="he-auth-form-side" aria-label="Form login Fumiko POS">
         <div class="he-auth-panel">
             <div class="he-mobile-logo">
-                <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya">
+                <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Logo Fumiko Styrofoam">
                 <div>
-                    <div class="he-brand-name he-mobile-brand-name">Hibiscus Efsya POS</div>
-                    <div class="he-brand-caption he-mobile-brand-caption">Secure staff access</div>
+                    <div class="he-brand-name he-mobile-brand-name">Fumiko POS</div>
+                    <div class="he-brand-caption he-mobile-brand-caption">Designed for life, Built to Last</div>
                 </div>
             </div>
 
-            <div class="he-form-eyebrow">Secure access</div>
-            <h2 class="he-form-title">Masuk ke Hibiscus Efsya POS</h2>
-            <p class="he-form-subtitle">Gunakan akun staff untuk mengelola transaksi, stok, kunjungan, dan approval.</p>
+            <div class="he-form-eyebrow">Akses Sistem Operasional</div>
+            <h2 class="he-form-title">Masuk ke Fumiko POS</h2>
+            <p class="he-form-subtitle">Gunakan akun staff atau pilih shortcut role demo di bawah untuk mencoba sistem langsung.</p>
 
             <div class="he-login-card">
                 {{ $this->content }}
             </div>
 
-            <div class="he-auth-support">
-                <div>
-                    <strong>Need account access?</strong>
-                    Hubungi admin gudang atau super admin untuk aktivasi akun.
+            <div class="fm-demo-box" aria-label="Shortcut role demo">
+                <div class="fm-demo-heading">
+                    <span class="fm-demo-title">Shortcut Login Demo (1-Klik)</span>
+                    <span class="fm-demo-badge">3 Role Aktif</span>
                 </div>
-                <div class="he-status-pill">Protected</div>
+
+                <div class="fm-demo-list">
+                    @foreach ($this->getDemoAccounts() as $demo)
+                        <button
+                            type="button"
+                            wire:click="loginAsDemo('{{ $demo['key'] }}')"
+                            wire:loading.attr="disabled"
+                            class="fm-demo-btn"
+                        >
+                            <div>
+                                <div class="fm-demo-role">{{ $demo['label'] }} · <span style="font-weight:600;">{{ $demo['role_label'] }}</span></div>
+                                <div class="fm-demo-meta">{{ $demo['email'] }} / {{ $demo['password'] }} - {{ $demo['hint'] }}</div>
+                            </div>
+                            <span class="fm-demo-cta">Masuk</span>
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>

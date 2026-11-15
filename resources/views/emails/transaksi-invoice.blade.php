@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice - Hibiscus Efsya</title>
+    <title>Invoice - Fumiko Styrofoam</title>
     <style>
         body { font-family: Arial, sans-serif; background: #fff7f8; margin: 0; padding: 24px 14px; color: #111827; }
         .container { max-width: 620px; margin: 0 auto; background: #fff; border: 1px solid #f3d6dc; border-radius: 14px; overflow: hidden; box-shadow: 0 18px 45px rgba(136, 19, 55, .12); }
@@ -19,7 +19,7 @@
     <div class="container">
         <div class="header">
             <span class="brand-mark">HE POS</span>
-            <h1 style="margin:0; font-size:21px;">Hibiscus Efsya POS</h1>
+            <h1 style="margin:0; font-size:21px;">Fumiko POS</h1>
         </div>
         <div class="body">
             <h2>Invoice Terlampir</h2>
@@ -34,7 +34,7 @@
             @endif
         </div>
         <div class="footer">
-            <p>Hibiscus Efsya POS | <a href="mailto:marketing@hibiscusefsya.com">marketing@hibiscusefsya.com</a></p>
+            <p>Fumiko POS | <a href="mailto:admin@fumiko.com">admin@fumiko.com</a></p>
         </div>
     </div>
 </body>

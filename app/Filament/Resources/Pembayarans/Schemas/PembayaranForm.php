@@ -75,7 +75,9 @@ class PembayaranForm
                                         return [];
                                     }
 
-                                    return [$p->id => $p->nomor.' — '.$p->pelanggan.' (Sisa: '.format_rupiah($sisa).')'];
+                                    $tokoLabel = $p->nama_toko ? "{$p->nama_toko} ({$p->pelanggan})" : $p->pelanggan;
+
+                                    return [$p->id => $p->nomor.' - '.$tokoLabel.' (Sisa: '.format_rupiah($sisa).')'];
                                 });
                             })
                             ->preload()

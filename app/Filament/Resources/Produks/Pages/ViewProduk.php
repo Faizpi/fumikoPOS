@@ -25,13 +25,22 @@ class ViewProduk extends ViewRecord
                     ->columns(2)
                     ->schema([
                         TextEntry::make('item_code')
-                            ->label('Kode Produk')
+                            ->label('Kode Barang')
                             ->weight('bold')
                             ->badge()
                             ->color('primary'),
                         TextEntry::make('nama_produk')
-                            ->label('Nama Produk')
+                            ->label('Nama Barang')
                             ->weight('bold'),
+                        TextEntry::make('ukuran')
+                            ->label('Ukuran')
+                            ->badge()
+                            ->color('info')
+                            ->placeholder('-'),
+                        TextEntry::make('kategori_label')
+                            ->label('Kategori Gudang')
+                            ->badge()
+                            ->color('success'),
                         TextEntry::make('harga')
                             ->label('Harga Retail')
                             ->money('IDR')
@@ -48,7 +57,7 @@ class ViewProduk extends ViewRecord
                             ->color('info'),
                         TextEntry::make('deskripsi')
                             ->label('Deskripsi')
-                            ->placeholder('—'),
+                            ->placeholder('-'),
                         TextEntry::make('created_at')
                             ->label('Dibuat')
                             ->dateTime('d M Y, H:i'),

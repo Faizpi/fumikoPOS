@@ -17,7 +17,7 @@ class BackupService
         $now = now()->format('Y-m-d H:i:s');
 
         yield "-- ============================================================\n";
-        yield "-- Hibiscus Efsya POS - Database Backup\n";
+        yield "-- Fumiko POS - Database Backup\n";
         yield "-- Database  : {$dbName}\n";
         yield "-- Generated : {$now}\n";
         yield "-- ============================================================\n\n";

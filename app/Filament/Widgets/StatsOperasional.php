@@ -72,53 +72,56 @@ class StatsOperasional extends BaseStatsOverviewWidget
             + $scope($bulanQuery(Biaya::query())->where('status', 'Canceled'))->count()
             + $scope(Kunjungan::whereYear('tgl_kunjungan', $now->year)->whereMonth('tgl_kunjungan', $now->month)->where('status', 'Canceled'), 'gudang_id', 'user_id')->count();
 
-        // 3. Kunjungan Sales
-        $kunjungan = $scope(Kunjungan::whereYear('tgl_kunjungan', $now->year)->whereMonth('tgl_kunjungan', $now->month), 'gudang_id', 'user_id');
+        // 3. Tagihan di Luar (Piutang Belum Lunas) & Hutang Supplier
+        $piutangQuery = $scope(
+            Penjualan::query()
+                ->where('status', 'Approved')
+                ->withSum(['pembayarans as paid_total' => fn ($q) => $q->where('status', 'Approved')], 'jumlah_bayar')
+        );
+        $tagihanDiLuar = (float) $piutangQuery->get(['id', 'grand_total'])->sum(
+            fn ($p) => max(0, (float) $p->grand_total - (float) ($p->paid_total ?? 0))
+        );
+
+        $hutangQuery = $scope(
+            Pembelian::query()->where('status', 'Approved')
+        );
+        $hutangSupplier = (float) $hutangQuery->get(['id', 'grand_total'])->sum(function ($pb) {
+            $paid = (float) Pembayaran::where('type', 'hutang')->where('pembelian_id', $pb->id)->where('status', 'Approved')->sum('jumlah_bayar');
+
+            return max(0, (float) $pb->grand_total - $paid);
+        });
 
         // 4. Total Produk
         if ($isUser && $userId) {
             $gudangUser = $user?->getCurrentGudang();
             $totalProduk = $gudangUser ? GudangProduk::where('gudang_id', $gudangUser->id)->count() : 0;
-            $produkLabel = 'Produk di Gudang';
+            $produkLabel = 'Stok Barang Gudang';
         } elseif ($isAdmin && $gudangId) {
             $totalProduk = GudangProduk::where('gudang_id', $gudangId)->count();
-            $produkLabel = 'Produk di Gudang';
+            $produkLabel = 'Stok Barang Gudang';
         } else {
             $totalProduk = Produk::count();
-            $produkLabel = 'Total Produk';
+            $produkLabel = 'Total Item Gudang';
         }
 
-        $lastSixMonths = collect(range(5, 0))->map(fn ($month) => $now->copy()->subMonths($month));
-
-        $canceledMonthlyChart = $lastSixMonths->map(function ($date) use ($scope): int {
-            return $scope(Penjualan::whereYear('tgl_transaksi', $date->year)->whereMonth('tgl_transaksi', $date->month)->where('status', 'Canceled'))->count()
-                 + $scope(Pembelian::whereYear('tgl_transaksi', $date->year)->whereMonth('tgl_transaksi', $date->month)->where('status', 'Canceled'))->count()
-                 + $scope(Biaya::whereYear('tgl_transaksi', $date->year)->whereMonth('tgl_transaksi', $date->month)->where('status', 'Canceled'))->count()
-                 + $scope(Kunjungan::whereYear('tgl_kunjungan', $date->year)->whereMonth('tgl_kunjungan', $date->month)->where('status', 'Canceled'), 'gudang_id', 'user_id')->count();
-        })->all();
-
-        $monthlyCount = function (string $modelClass, string $dateColumn, ?string $gudangColumn = 'gudang_id', ?string $userColumn = 'user_id') use ($lastSixMonths, $scope): array {
-            return $lastSixMonths->map(fn ($date) => (int) $scope($modelClass::whereYear($dateColumn, $date->year)->whereMonth($dateColumn, $date->month), $gudangColumn, $userColumn)->count())->all();
-        };
-
         return [
+            Stat::make('Tagihan di Luar (Belum Lunas)', format_rupiah($tagihanDiLuar))
+                ->description('Piutang customer aktif')
+                ->descriptionIcon('heroicon-o-document-currency-dollar')
+                ->color($tagihanDiLuar > 0 ? 'warning' : 'success'),
+
+            Stat::make('Hutang ke Supplier', format_rupiah($hutangSupplier))
+                ->description('Sesuai surat jalan masuk')
+                ->descriptionIcon('heroicon-o-truck')
+                ->color($hutangSupplier > 0 ? 'danger' : 'success'),
+
             Stat::make('Menunggu Approval', number_format($menungguApproval))
-                ->description('Pending di semua modul')
+                ->description('Pending transaksi · '.$bulanLabel)
                 ->descriptionIcon('heroicon-o-clock')
                 ->color($menungguApproval > 0 ? 'warning' : 'success'),
 
-            Stat::make('Transaksi Batal', number_format($canceled))
-                ->description('Semua modul · '.$bulanLabel)
-                ->descriptionIcon('heroicon-o-x-circle')
-                ->color($canceled > 0 ? 'danger' : 'gray'),
-
-            Stat::make('Kunjungan Sales', number_format($kunjungan->count()).' kali')
-                ->description('Bulan '.$bulanLabel)
-                ->descriptionIcon('heroicon-o-map-pin')
-                ->color('gray'),
-
             Stat::make($produkLabel, number_format($totalProduk))
-                ->description('Produk terdaftar')
+                ->description('Bahan jual, aset & lain-lain')
                 ->descriptionIcon('heroicon-o-cube')
                 ->color('gray'),
         ];

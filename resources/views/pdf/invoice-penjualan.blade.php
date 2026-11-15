@@ -210,8 +210,8 @@
 <body>
     <!-- HEADER -->
     <div class="header">
-        <div class="logo">HIBISCUS EFSYA</div>
-        <div class="tagline">marketing@hibiscusefsya.com</div>
+        <div class="logo">FUMIKO STYROFOAM</div>
+        <div class="tagline">admin@fumiko.com</div>
         <div class="invoice-title">INVOICE PENJUALAN</div>
     </div>
 
@@ -375,7 +375,7 @@
     <!-- FOOTER -->
     <div class="footer">
         <p>Dokumen ini dicetak secara otomatis oleh sistem.</p>
-        <p>marketing@hibiscusefsya.com</p>
+        <p>admin@fumiko.com</p>
     </div>
 </body>
 

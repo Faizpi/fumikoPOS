@@ -13,7 +13,7 @@ class Penjualan extends Model
 
     protected $fillable = [
         'user_id', 'approver_id', 'no_urut_harian', 'nomor', 'uuid',
-        'gudang_id', 'tipe_harga', 'pelanggan', 'no_telepon',
+        'gudang_id', 'tipe_harga', 'pelanggan', 'nama_toko', 'email', 'no_telepon',
         'alamat_penagihan', 'koordinat', 'tgl_transaksi', 'tgl_jatuh_tempo',
         'syarat_pembayaran', 'no_referensi', 'no_resi', 'biaya_pengiriman',
         'tag', 'memo', 'lampiran_path', 'lampiran_paths', 'status',

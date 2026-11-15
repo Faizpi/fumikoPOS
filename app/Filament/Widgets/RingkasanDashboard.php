@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Biaya;
 use App\Models\Pembayaran;
+use App\Models\Pembelian;
 use App\Models\Penjualan;
 use Carbon\Carbon;
 use Filament\Widgets\Widget;
@@ -76,13 +77,22 @@ class RingkasanDashboard extends Widget
                 ->where('status', 'Approved'),
         );
         $pembayaran = $this->applyScope(
-            Pembayaran::query()->whereBetween('tgl_pembayaran', [$start, $end]),
+            Pembayaran::query()
+                ->where('type', 'piutang')
+                ->where('status', 'Approved')
+                ->whereBetween('tgl_pembayaran', [$start, $end]),
+        );
+        $pembelian = $this->applyScope(
+            Pembelian::query()
+                ->whereIn('status', ['Approved', 'Lunas'])
+                ->whereBetween('tgl_transaksi', [$start, $end]),
         );
 
         return [
             'label' => $label,
             'penjualan' => $this->totals($penjualan, 'grand_total'),
             'biaya' => $this->totals($biaya, 'grand_total'),
+            'pembelian' => $this->totals($pembelian, 'grand_total'),
             'pembayaran' => $this->totals($pembayaran, 'jumlah_bayar'),
             'jatuhTempo' => $this->outstandingDueTotal($start, $end),
         ];

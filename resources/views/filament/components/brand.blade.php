@@ -1,13 +1,13 @@
-<div style="display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
+<div class="he-brand-lockup">
     <img
-        src="{{ asset('hibiscusefsya.png') }}"
-        alt=""
+        src="{{ asset('assets/img/logo-fumiko.jpg') }}"
+        alt="Fumiko Styrofoam"
         width="40"
         height="40"
-        style="display: block; width: 2.5rem; height: 2.5rem; flex: 0 0 2.5rem; object-fit: contain;"
+        class="he-brand-logo"
+        style="width: 2.25rem; height: 2.25rem; max-width: 2.25rem; max-height: 2.25rem; object-fit: cover; border-radius: 0.375rem; border: 1px solid rgba(245, 158, 11, 0.35);"
     >
-
-    <span style="font-size: 1rem; font-weight: 700; line-height: 1.5rem; color: currentColor;">
-        Hibiscus Efsya
+    <span class="he-brand-title">
+        Fumiko POS
     </span>
 </div>

@@ -35,46 +35,53 @@ class PenjualanForm
                     ->icon('heroicon-o-user')
                     ->schema([
                         Select::make('pelanggan')
-                            ->label('Pelanggan')
+                            ->label('Nama Pembeli')
                             ->required()
                             ->searchable()
-                            // Gap 2 fix: filter kontak berdasarkan gudang aktif user (sesuai legacy)
                             ->options(function (callable $get) {
                                 $user = auth()->user();
-                                if ($user?->isSuperAdmin()) {
-                                    return Kontak::orderBy('nama')->pluck('nama', 'nama');
-                                }
-                                if ($user?->role === 'user') {
-                                    return Kontak::where('created_by', $user->id)
-                                        ->orderBy('nama')->pluck('nama', 'nama');
-                                }
-                                $gudangId = $get('gudang_id') ?? $user?->getCurrentGudang()?->id;
-
-                                return Kontak::where(function ($q) use ($gudangId) {
-                                    $q->whereNull('gudang_id');
-                                    if ($gudangId) {
-                                        $q->orWhere('gudang_id', $gudangId);
+                                $query = Kontak::orderBy('nama');
+                                if (! $user?->isSuperAdmin()) {
+                                    if ($user?->role === 'user') {
+                                        $query->where(fn ($q) => $q->where('created_by', $user->id)->orWhereNull('created_by'));
+                                    } else {
+                                        $gudangId = $get('gudang_id') ?? $user?->getCurrentGudang()?->id;
+                                        $query->where(function ($q) use ($gudangId) {
+                                            $q->whereNull('gudang_id');
+                                            if ($gudangId) {
+                                                $q->orWhere('gudang_id', $gudangId);
+                                            }
+                                        });
                                     }
-                                })->orderBy('nama')->pluck('nama', 'nama');
+                                }
+
+                                return $query->get()->mapWithKeys(fn (Kontak $k) => [
+                                    $k->nama => $k->nama_toko ? "{$k->nama} ({$k->nama_toko})" : $k->nama,
+                                ]);
                             })
                             ->live()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
                                     $kontak = Kontak::where('nama', $state)->first();
                                     if ($kontak) {
+                                        $set('nama_toko', $kontak->nama_toko);
                                         $set('no_telepon', $kontak->no_telp);
                                         $set('alamat_penagihan', $kontak->alamat);
                                     }
                                 }
                             })
                             ->createOptionForm([
-                                TextInput::make('nama')->label('Nama')->required(),
-                                TextInput::make('no_telp')->label('No. Telepon')->tel(),
-                                Textarea::make('alamat')->label('Alamat')->rows(2),
+                                TextInput::make('nama')->label('Nama Pembeli')->required(),
+                                TextInput::make('nama_toko')->label('Nama Toko / Usaha'),
+                                TextInput::make('no_telp')->label('No. HP / WhatsApp')->tel(),
+                                Textarea::make('alamat')->label('Alamat Lengkap')->rows(2),
                             ])
                             ->createOptionUsing(function (array $data) {
                                 $kontak = Kontak::create([
+                                    'kode_kontak' => Kontak::generateKodeKontak(),
+                                    'tipe_kontak' => 'customer',
                                     'nama' => $data['nama'],
+                                    'nama_toko' => $data['nama_toko'] ?? null,
                                     'no_telp' => $data['no_telp'] ?? null,
                                     'alamat' => $data['alamat'] ?? null,
                                     'created_by' => auth()->id(),
@@ -93,13 +100,20 @@ class PenjualanForm
                                     ])
                             ),
 
+                        TextInput::make('nama_toko')
+                            ->label('Nama Toko')
+                            ->placeholder('Contoh: Toko Plastik & Kemasan Makmur')
+                            ->maxLength(255),
+
                         TextInput::make('no_telepon')
-                            ->label('No. Telepon')
+                            ->label('No. HP Pembeli')
                             ->tel()
+                            ->placeholder('08xxxxxxxxxx')
                             ->maxLength(20),
 
                         Textarea::make('alamat_penagihan')
-                            ->label('Alamat Penagihan')
+                            ->label('Alamat Lengkap (Toko / Pengiriman)')
+                            ->placeholder('Alamat pengiriman barang / lokasi toko...')
                             ->rows(2)
                             ->columnSpanFull(),
                     ])
@@ -235,7 +249,7 @@ class PenjualanForm
                             ->label('')
                             ->schema([
                                 Select::make('produk_id')
-                                    ->label('Produk')
+                                    ->label('Nama Barang')
                                     ->required()
                                     // Gap 1 fix: hanya tampilkan produk yang ada stok di gudang terpilih
                                     ->options(function (callable $get) {
@@ -244,7 +258,9 @@ class PenjualanForm
                                             ?? auth()->user()?->gudang_id;
 
                                         if (! $gudangId) {
-                                            return Produk::orderBy('nama_produk')->pluck('nama_produk', 'id');
+                                            return Produk::orderBy('nama_produk')->get()->mapWithKeys(fn (Produk $p) => [
+                                                $p->id => $p->nama_dengan_ukuran,
+                                            ]);
                                         }
 
                                         // Hanya produk yang ada di gudang tersebut dengan stok_penjualan > 0
@@ -253,7 +269,7 @@ class PenjualanForm
                                             ->with('produk')
                                             ->get()
                                             ->mapWithKeys(fn ($gp) => [
-                                                $gp->produk_id => $gp->produk?->nama_produk.' (Stok: '.$gp->stok_penjualan.')',
+                                                $gp->produk_id => ($gp->produk?->nama_dengan_ukuran ?? $gp->produk?->nama_produk).' (Stok: '.$gp->stok_penjualan.')',
                                             ]);
                                     })
                                     ->searchable()
@@ -268,7 +284,8 @@ class PenjualanForm
                                         }
                                         $tipeHarga = $get('../../tipe_harga') ?? 'retail';
                                         $harga = ($tipeHarga === 'grosir' && $produk->harga_grosir > 0) ? $produk->harga_grosir : $produk->harga;
-                                        $set('kuantitas', 0);
+                                        $set('kuantitas', 1);
+                                        $set('ukuran', $produk->ukuran);
                                         $set('harga_satuan', (float) $harga);
                                         $set('unit', $produk->satuan);
                                         $set('deskripsi', $produk->deskripsi);
@@ -283,20 +300,26 @@ class PenjualanForm
                                                 'x-on:click' => 'event.preventDefault(); if(window.openPosScannerForField) openPosScannerForField($event, "produk", "Scan Kode Produk", "id")',
                                             ])
                                     )
-                                    ->columnSpan(['default' => 1, 'md' => 6]),
+                                    ->columnSpan(['default' => 1, 'md' => 5]),
+
+                                TextInput::make('ukuran')
+                                    ->label('Ukuran Pesanan')
+                                    ->placeholder('Contoh: 40x60x30 cm')
+                                    ->maxLength(100)
+                                    ->columnSpan(['default' => 1, 'md' => 3]),
 
                                 TextInput::make('kuantitas')
                                     ->label('Qty')
                                     ->required()
                                     ->numeric()
-                                    ->default(0)
+                                    ->default(1)
                                     ->minValue(1)
                                     ->live()
                                     ->afterStateUpdated(fn ($set, $get) => self::recalcRow($set, $get))
                                     ->columnSpan(['default' => 1, 'md' => 2]),
 
                                 TextInput::make('unit')
-                                    ->label('Unit')
+                                    ->label('Satuan')
                                     ->disabled()
                                     ->dehydrated()
                                     ->columnSpan(['default' => 1, 'md' => 2]),

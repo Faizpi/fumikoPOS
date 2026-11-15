@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Portal Customer — Hibiscus Efsya</title>
+    <title>Login Portal Customer — Fumiko Styrofoam</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -96,8 +96,8 @@
             <div class="card shadow-lg border-0">
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <img src="{{ asset('assets/img/logoHE1.png') }}" alt="Hibiscus Efsya" class="brand-logo">
-                        <h4 class="font-weight-bold">Hibiscus Efsya</h4>
+                        <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Fumiko Styrofoam" class="brand-logo">
+                        <h4 class="font-weight-bold">Fumiko Styrofoam</h4>
                         <p class="text-muted small">Portal Customer</p>
                     </div>
 

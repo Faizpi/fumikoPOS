@@ -10,7 +10,7 @@
 
     <div class="space-y-6">
     <div class="he-finance-filter flex flex-wrap items-center gap-3 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-        Periode: <strong>{{ $this->filter_from ? \Carbon\Carbon::parse($this->filter_from)->format('d/m/Y') : 'Semua' }} — {{ $this->filter_to ? \Carbon\Carbon::parse($this->filter_to)->format('d/m/Y') : 'Semua' }}</strong>
+        Periode: <strong>{{ $this->filter_from ? \Carbon\Carbon::parse($this->filter_from)->format('d/m/Y') : 'Semua' }} - {{ $this->filter_to ? \Carbon\Carbon::parse($this->filter_to)->format('d/m/Y') : 'Semua' }}</strong>
     </div>
 
     {{-- Summary --}}
@@ -31,7 +31,7 @@
 
     <x-filament::section heading="Aging Hutang (Posted Ledger)" class="he-finance-section">
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
-            @foreach (['current' => 'Current', '1-30' => '1–30', '31-60' => '31–60', '61-90' => '61–90', '90+' => '90+'] as $key => $label)
+            @foreach (['current' => 'Current', '1-30' => '1-30', '31-60' => '31-60', '61-90' => '61-90', '90+' => '90+'] as $key => $label)
                 <div><p class="text-xs text-gray-500">{{ $label }}</p><p class="font-semibold tabular-nums text-gray-950 dark:text-white">Rp {{ number_format($aging['buckets'][$key], 0, ',', '.') }}</p></div>
             @endforeach
         </div>
@@ -82,13 +82,14 @@
     </x-filament::section>
 
     {{-- List Tempo --}}
-    <x-filament::section heading="List Tempo Hutang — Belum & Sudah Terbayar" class="he-finance-section">
+    <x-filament::section heading="Daftar Hutang Supplier & Surat Jalan - Belum & Sudah Terbayar" class="he-finance-section">
         <div class="overflow-x-auto">
             <table class="he-finance-table w-full text-sm">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 dark:bg-white/5 dark:text-gray-300">
                         <th class="text-left py-2 px-3 font-medium">Supplier</th>
-                        <th class="text-left py-2 px-3 font-medium">Nomor</th>
+                        <th class="text-left py-2 px-3 font-medium">Nomor PO/Faktur</th>
+                        <th class="text-left py-2 px-3 font-medium">No. Surat Jalan</th>
                         <th class="text-left py-2 px-3 font-medium">Gudang</th>
                         <th class="text-left py-2 px-3 font-medium">Jatuh Tempo</th>
                         <th class="text-right py-2 px-3 font-medium">Total</th>
@@ -106,13 +107,14 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
                         <td class="py-2 px-3 font-medium">{{ $item['supplier'] }}</td>
                         <td class="py-2 px-3 font-mono text-xs">{{ $item['nomor'] }}</td>
-                        <td class="py-2 px-3">{{ $item['gudang'] ?? '—' }}</td>
-                        <td class="py-2 px-3 @if($item['jatuh_tempo_lewat']) text-danger-600 font-bold @endif">{{ $item['tgl_jatuh_tempo'] ?? '—' }}</td>
+                        <td class="py-2 px-3 font-mono text-xs">{{ $item['no_surat_jalan'] ?? '-' }}</td>
+                        <td class="py-2 px-3">{{ $item['gudang'] ?? '-' }}</td>
+                        <td class="py-2 px-3 @if($item['jatuh_tempo_lewat']) text-danger-600 font-bold @endif">{{ $item['tgl_jatuh_tempo'] ?? '-' }}</td>
                         <td class="py-2 px-3 text-right">Rp {{ number_format($item['grand_total'], 0, ',', '.') }}</td>
                         <td class="py-2 px-3 text-right text-success-600">Rp {{ number_format($item['debit'], 0, ',', '.') }}</td>
                         <td class="py-2 px-3 text-right">Rp {{ number_format($item['credit'], 0, ',', '.') }}</td>
                         <td class="py-2 px-3 text-right font-medium">Rp {{ number_format($item['saldo'], 0, ',', '.') }}</td>
-                        <td class="py-2 px-3 font-mono text-xs">{{ $item['journal_number'] ?? '—' }}</td>
+                        <td class="py-2 px-3 font-mono text-xs">{{ $item['journal_number'] ?? '-' }}</td>
                         <td class="py-2 px-3 text-right text-success-600">Rp {{ number_format($item['sudah_bayar'], 0, ',', '.') }}</td>
                         <td class="py-2 px-3 text-right @if($item['sisa'] > 0) text-danger-600 font-bold @endif">Rp {{ number_format($item['sisa'], 0, ',', '.') }}</td>
                         <td class="py-2 px-3 text-center">
@@ -125,7 +127,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="he-finance-empty py-8 text-center">Belum ada data hutang.</td>
+                        <td colspan="13" class="he-finance-empty py-8 text-center">Belum ada data hutang.</td>
                     </tr>
                     @endforelse
                 </tbody>

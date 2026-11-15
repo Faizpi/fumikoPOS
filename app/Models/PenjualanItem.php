@@ -9,7 +9,7 @@ class PenjualanItem extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'penjualan_id', 'produk_id', 'deskripsi', 'kuantitas',
+        'penjualan_id', 'produk_id', 'ukuran', 'deskripsi', 'kuantitas',
         'unit', 'harga_satuan', 'diskon', 'diskon_nominal',
         'batch_number', 'expired_date', 'jumlah_baris',
     ];

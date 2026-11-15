@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifikasi Transaksi - Hibiscus Efsya</title>
+    <title>Notifikasi Transaksi - Fumiko Styrofoam</title>
     <style>
         body { font-family: Arial, sans-serif; background: #fff7f8; margin: 0; padding: 24px 14px; color: #111827; }
         .container { max-width: 620px; margin: 0 auto; background: #fff; border: 1px solid #f3d6dc; border-radius: 14px; overflow: hidden; box-shadow: 0 18px 45px rgba(136, 19, 55, .12); }
@@ -25,7 +25,7 @@
     <div class="container">
         <div class="header">
             <span class="brand-mark">HE POS</span>
-            <h1>Hibiscus Efsya POS</h1>
+            <h1>Fumiko POS</h1>
             <p style="margin:4px 0 0; font-size:13px; opacity:.85;">Notifikasi Transaksi</p>
         </div>
         <div class="body">
@@ -74,8 +74,8 @@
             @endif
         </div>
         <div class="footer">
-            <p>Email ini dikirim otomatis oleh sistem Hibiscus Efsya POS.<br>
-            <a href="mailto:marketing@hibiscusefsya.com">marketing@hibiscusefsya.com</a></p>
+            <p>Email ini dikirim otomatis oleh sistem Fumiko POS.<br>
+            <a href="mailto:admin@fumiko.com">admin@fumiko.com</a></p>
         </div>
     </div>
 </body>

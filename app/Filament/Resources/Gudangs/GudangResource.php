@@ -47,6 +47,10 @@ class GudangResource extends Resource
 
     public static function canCreate(): bool
     {
+        if (Gudang::count() >= 1) {
+            return false;
+        }
+
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 
@@ -57,6 +61,10 @@ class GudangResource extends Resource
 
     public static function canDelete($record): bool
     {
+        if (Gudang::count() <= 1) {
+            return false;
+        }
+
         return auth()->user()?->isSuperAdmin() ?? false;
     }
 

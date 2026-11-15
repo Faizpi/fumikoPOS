@@ -85,7 +85,7 @@ class PrintController extends Controller
     {
         $out = self::ESC_RESET;
         $out .= self::ESC_ALIGN_CENTER;
-        $out .= self::ESC_BOLD_ON.'HIBISCUS EFSYA'.self::ESC_BOLD_OFF."\r\n";
+        $out .= self::ESC_BOLD_ON.'FUMIKO STYROFOAM'.self::ESC_BOLD_OFF."\r\n";
         $out .= strtoupper($title)."\r\n";
         $out .= self::ESC_ALIGN_LEFT;
         $out .= "\r\n";
@@ -179,7 +179,7 @@ class PrintController extends Controller
     private function divFooter()
     {
         $out = self::ESC_ALIGN_CENTER;
-        $out .= "marketing@hibiscusefsya.com\r\n";
+        $out .= "Designed for life, Built to Last\r\n";
         $out .= "-- Terima Kasih --\r\n";
         $out .= "\r\n\r\n\r\n\r\n\r\n";
 

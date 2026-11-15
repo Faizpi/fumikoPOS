@@ -9,7 +9,7 @@ class PembelianItem extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'pembelian_id', 'produk_id', 'deskripsi', 'kuantitas',
+        'pembelian_id', 'produk_id', 'ukuran', 'deskripsi', 'kuantitas',
         'unit', 'harga_satuan', 'diskon', 'jumlah_baris',
     ];
 

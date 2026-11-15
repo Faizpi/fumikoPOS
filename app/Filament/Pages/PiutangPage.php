@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Gudang;
+use App\Models\Pembayaran;
 use App\Models\Penjualan;
 use App\Services\Accounting\AccountingReportService;
 use App\Services\Accounting\PiutangLedgerService;
@@ -29,9 +30,9 @@ class PiutangPage extends Page
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationLabel = 'Dashboard Piutang';
+    protected static ?string $navigationLabel = 'Tagihan di Luar (Piutang)';
 
-    protected static ?string $title = 'Dashboard Piutang';
+    protected static ?string $title = 'Tagihan Customer (Invoice di Luar)';
 
     protected string $view = 'filament.pages.piutang';
 
@@ -40,6 +41,8 @@ class PiutangPage extends Page
     public ?string $filter_to = null;
 
     public ?int $filter_gudang_id = null;
+
+    public string $filter_status = 'semua';
 
     public int $perPage = 10;
 
@@ -51,7 +54,7 @@ class PiutangPage extends Page
     public function mount(): void
     {
         $this->filter_from = now()->startOfYear()->format('Y-m-d');
-        $this->filter_to = now()->format('Y-m-d');
+        $this->filter_to = now()->addMonths(3)->format('Y-m-d');
     }
 
     public static function canAccess(): bool
@@ -118,103 +121,100 @@ class PiutangPage extends Page
 
     public function getListToko(): LengthAwarePaginator
     {
-        $user = Auth::user();
+        $query = $this->basePiutangQuery();
 
-        if (! in_array($user->role, ['spectator', 'super_admin'])) {
-            return new LengthAwarePaginator([], 0, $this->perPage, $this->getPage());
-        }
-
-        $query = Penjualan::with(['gudang'])
-            ->whereIn('status', ['Approved', 'Lunas'])
-            ->whereNotNull('tgl_jatuh_tempo');
-
-        if ($this->filter_gudang_id) {
-            $query->where('gudang_id', $this->filter_gudang_id);
-        }
-        if ($this->filter_from) {
-            $query->where('tgl_jatuh_tempo', '>=', $this->filter_from);
-        }
-        if ($this->filter_to) {
-            $query->where('tgl_jatuh_tempo', '<=', $this->filter_to);
-        }
-
-        $paginator = $query->orderBy('tgl_jatuh_tempo')
+        $paginator = $query->orderByRaw("CASE WHEN status = 'Approved' THEN 0 ELSE 1 END")
+            ->orderBy('tgl_jatuh_tempo')
             ->paginate($this->perPage, ['*'], 'page', $this->getPage())
             ->onEachSide(0);
 
         $ledger = app(PiutangLedgerService::class);
-        $paginator->setCollection($paginator->getCollection()->map(function ($p) use ($ledger) {
-            $mutations = $ledger->mutationsForSale($p);
-            $latestMutation = $mutations->last();
-            $sisa = $latestMutation['running_balance'] ?? '0.00';
-            $totalBayar = bcsub((string) $p->grand_total, $sisa, 2);
-
-            return [
-                'nomor' => $p->custom_number,
-                'pelanggan' => $p->pelanggan,
-                'gudang' => $p->gudang?->nama_gudang,
-                'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
-                'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
-                'grand_total' => $p->grand_total,
-                'sudah_bayar' => $totalBayar,
-                'sisa' => $sisa,
-                'debit' => $latestMutation['debit'] ?? '0.00',
-                'credit' => $latestMutation['credit'] ?? '0.00',
-                'saldo' => $latestMutation['running_balance'] ?? '0.00',
-                'journal_number' => $latestMutation['journal_number'] ?? null,
-                'status' => $p->status,
-            ];
-        }));
+        $paginator->setCollection($paginator->getCollection()->map(fn ($p) => $this->mapPiutangRow($p, $ledger)));
 
         return $paginator;
     }
 
     public function getListTokoAll(): Collection
     {
+        $ledger = app(PiutangLedgerService::class);
+
+        return $this->basePiutangQuery()
+            ->orderByRaw("CASE WHEN status = 'Approved' THEN 0 ELSE 1 END")
+            ->orderBy('tgl_jatuh_tempo')
+            ->get()
+            ->map(fn ($p) => $this->mapPiutangRow($p, $ledger));
+    }
+
+    private function basePiutangQuery()
+    {
         $user = Auth::user();
 
-        if (! in_array($user->role, ['spectator', 'super_admin'])) {
-            return collect();
-        }
+        $query = Penjualan::with(['gudang', 'pembayarans'])
+            ->whereIn('status', ['Approved', 'Lunas']);
 
-        $query = Penjualan::with(['gudang'])
-            ->whereIn('status', ['Approved', 'Lunas'])
-            ->whereNotNull('tgl_jatuh_tempo');
+        if ($user->role === 'user') {
+            $query->where('user_id', $user->id);
+        } elseif ($user->role === 'admin' && $user->current_gudang_id) {
+            $query->where('gudang_id', $user->current_gudang_id);
+        }
 
         if ($this->filter_gudang_id) {
             $query->where('gudang_id', $this->filter_gudang_id);
         }
         if ($this->filter_from) {
-            $query->where('tgl_jatuh_tempo', '>=', $this->filter_from);
+            $query->whereDate('tgl_transaksi', '>=', $this->filter_from);
         }
         if ($this->filter_to) {
-            $query->where('tgl_jatuh_tempo', '<=', $this->filter_to);
+            $query->whereDate('tgl_transaksi', '<=', $this->filter_to);
+        }
+        if ($this->filter_status === 'belum_lunas') {
+            $query->where('status', 'Approved');
+        } elseif ($this->filter_status === 'lunas') {
+            $query->where('status', 'Lunas');
         }
 
-        $ledger = app(PiutangLedgerService::class);
+        return $query;
+    }
 
-        return $query->orderBy('tgl_jatuh_tempo')->get()->map(function ($p) use ($ledger) {
-            $mutations = $ledger->mutationsForSale($p);
-            $latestMutation = $mutations->last();
-            $sisa = $latestMutation['running_balance'] ?? '0.00';
-            $totalBayar = bcsub((string) $p->grand_total, $sisa, 2);
+    private function mapPiutangRow(Penjualan $p, PiutangLedgerService $ledger): array
+    {
+        $mutations = $ledger->mutationsForSale($p);
+        $latestMutation = $mutations->last();
 
-            return [
-                'nomor' => $p->custom_number,
-                'pelanggan' => $p->pelanggan,
-                'gudang' => $p->gudang?->nama_gudang,
-                'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
-                'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
-                'grand_total' => $p->grand_total,
-                'sudah_bayar' => $totalBayar,
-                'sisa' => $sisa,
-                'debit' => $latestMutation['debit'] ?? '0.00',
-                'credit' => $latestMutation['credit'] ?? '0.00',
-                'saldo' => $latestMutation['running_balance'] ?? '0.00',
-                'journal_number' => $latestMutation['journal_number'] ?? null,
-                'status' => $p->status,
-            ];
-        });
+        if ($mutations->isNotEmpty() && $latestMutation !== null) {
+            $sisa = (float) ($latestMutation['running_balance'] ?? 0);
+            $totalBayar = max(0, (float) $p->grand_total - $sisa);
+        } else {
+            $totalBayar = (float) Pembayaran::where('penjualan_id', $p->id)
+                ->where('type', 'piutang')
+                ->where('status', 'Approved')
+                ->sum('jumlah_bayar');
+            if ($p->status === 'Lunas' && $totalBayar <= 0) {
+                $totalBayar = (float) $p->grand_total;
+            }
+            $sisa = max(0, (float) $p->grand_total - $totalBayar);
+        }
+
+        return [
+            'id' => $p->id,
+            'nomor' => $p->custom_number,
+            'nama_toko' => $p->nama_toko,
+            'pelanggan' => $p->pelanggan,
+            'no_telepon' => $p->no_telepon,
+            'syarat_pembayaran' => $p->syarat_pembayaran,
+            'gudang' => $p->gudang?->nama_gudang,
+            'tgl_transaksi' => $p->tgl_transaksi?->format('d/m/Y'),
+            'tgl_jatuh_tempo' => $p->tgl_jatuh_tempo?->format('d/m/Y'),
+            'jatuh_tempo_lewat' => $p->tgl_jatuh_tempo?->isPast() && $p->status === 'Approved',
+            'grand_total' => (float) $p->grand_total,
+            'sudah_bayar' => $totalBayar,
+            'sisa' => $sisa,
+            'debit' => $latestMutation['debit'] ?? '0.00',
+            'credit' => $latestMutation['credit'] ?? '0.00',
+            'saldo' => $latestMutation['running_balance'] ?? number_format($sisa, 2, '.', ''),
+            'journal_number' => $latestMutation['journal_number'] ?? null,
+            'status' => $p->status,
+        ];
     }
 
     protected function getHeaderActions(): array

@@ -18,6 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $isTestRun = app()->environment('testing')
+            || app()->runningUnitTests()
+            || class_exists(\PHPUnit\Runner\Version::class, false);
+
+        if (! $isTestRun) {
+            $this->call(FumikoDemoSeeder::class);
+
+            return;
+        }
+
         // Seed Chart of Accounts first
         $this->call(HibiscusEfsyaChartOfAccountsSeeder::class);
 

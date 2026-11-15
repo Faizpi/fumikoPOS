@@ -25,7 +25,7 @@ class ApiDocController extends Controller
 
         return response($spec, 200, [
             'Content-Type' => 'application/json',
-            'Content-Disposition' => 'attachment; filename="hibiscusefsya-api-spec.json"',
+            'Content-Disposition' => 'attachment; filename="fumiko-api-spec.json"',
         ]);
     }
 
@@ -36,7 +36,7 @@ class ApiDocController extends Controller
 
         return response($json, 200, [
             'Content-Type' => 'application/json',
-            'Content-Disposition' => 'attachment; filename="hibiscusefsya-postman.json"',
+            'Content-Disposition' => 'attachment; filename="fumiko-postman.json"',
         ]);
     }
 
@@ -45,9 +45,9 @@ class ApiDocController extends Controller
         return [
             'openapi' => '3.0.0',
             'info' => [
-                'title' => 'Hibiscus Efsya POS API',
+                'title' => 'Fumiko POS API',
                 'version' => '1.0.0',
-                'description' => 'API untuk aplikasi mobile Hibiscus Efsya POS. Semua endpoint prefix /api/v1.',
+                'description' => 'API untuk aplikasi mobile Fumiko POS. Semua endpoint prefix /api/v1.',
             ],
             'servers' => [['url' => url('api/v1')]],
             'tags' => [
@@ -651,7 +651,7 @@ class ApiDocController extends Controller
     {
         return [
             'info' => [
-                'name' => 'Hibiscus Efsya POS API v1',
+                'name' => 'Fumiko POS API v1',
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
             ],
             'item' => [

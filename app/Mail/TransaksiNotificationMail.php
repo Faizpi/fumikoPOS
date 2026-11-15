@@ -53,7 +53,7 @@ class TransaksiNotificationMail extends Mailable
             $viewName = 'emails.transaksi-notification';
         }
 
-        $mail = $this->subject("[{$notifLabel}] {$label} #{$nomor} - Hibiscus Efsya")
+        $mail = $this->subject("[{$notifLabel}] {$label} #{$nomor} - Fumiko Styrofoam")
             ->view($viewName)
             ->with([
                 'transaksi' => $this->transaksi,

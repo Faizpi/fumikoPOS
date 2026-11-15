@@ -13,6 +13,8 @@ use UnitEnum;
 
 class CatatanHutang extends Page
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
     protected static string|UnitEnum|null $navigationGroup = 'Kontak';

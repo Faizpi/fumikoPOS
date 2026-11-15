@@ -42,8 +42,8 @@ class CreatePembayaran extends CreateRecord
 
         $gudangId = (int) ($data['gudang_id'] ?? 0);
 
-        // Super admin: langsung Approved, lainnya: Pending
-        if ($user->isSuperAdmin()) {
+        // Admin & Super admin: langsung Approved agar uang kas & status tagihan otomatis terupdate
+        if ($user->isSuperAdmin() || $user->isAdmin()) {
             $data['status'] = 'Approved';
             $data['approver_id'] = $user->id;
         } else {
@@ -118,8 +118,19 @@ class CreatePembayaran extends CreateRecord
                     'lampiran_paths' => $index === 0 ? $lampiranPaths : [],
                 ]));
 
-                // Jika langsung Approved (super_admin), cek apakah invoice sudah lunas
+                // Jika langsung Approved (admin/super_admin), post jurnal piutang & cek apakah invoice sudah lunas
                 if ($data['status'] === 'Approved') {
+                    try {
+                        app(\App\Services\Accounting\PiutangPostingService::class)->postPayment(
+                            $pembayaran,
+                            (string) $bayarUntukIni,
+                            null,
+                            $user->id
+                        );
+                    } catch (\Throwable $e) {
+                        // Tetap lanjutkan pembaruan status tagihan bila jurnal penjualan belum tersedia
+                    }
+
                     $totalBayarSetelah = (float) Pembayaran::where('penjualan_id', $detail['penjualan']->id)
                         ->where('status', 'Approved')
                         ->sum('jumlah_bayar');

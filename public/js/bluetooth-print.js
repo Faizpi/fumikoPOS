@@ -137,7 +137,7 @@ class BluetoothThermalPrinter {
 
         let content = this.COMMANDS.RESET;
         content += this.COMMANDS.ALIGN_CENTER;
-        content += '\x1D\x21\x11' + this.COMMANDS.BOLD_ON + 'HIBISCUS EFSYA\n';
+        content += '\x1D\x21\x11' + this.COMMANDS.BOLD_ON + 'FUMIKO STYROFOAM\n';
         content += '\x1D\x21\x00' + this.COMMANDS.BOLD_OFF;
 
         const title = this.receiptTitle(data);
@@ -153,9 +153,9 @@ class BluetoothThermalPrinter {
         content += 'Periksa Invoice & Ambil Promo !\n';
         content += this.COMMANDS.BOLD_OFF + '\n';
         content += dashLine + '\n';
-        content += 'customer.hibiscusefsya.com\n';
+        content += 'fumiko.local\n';
         content += dashLine + '\n';
-        content += 'marketing@hibiscusefsya.com\n\n';
+        content += 'admin@fumiko.com\n\n';
         parts.push({ type: 'text', data: content });
 
         let footer = this.COMMANDS.ALIGN_CENTER + this.COMMANDS.FONT_B;
@@ -238,16 +238,16 @@ class BluetoothThermalPrinter {
                 </div>
                 <div class="bt-preview-scroll">
                     <div class="bt-preview-paper${paperClass}">
-                        <div class="bt-receipt-brand">HIBISCUS EFSYA</div>
+                        <div class="bt-receipt-brand">FUMIKO STYROFOAM</div>
                         <div class="bt-receipt-title">${this.escapeHtml(title)}</div>
                         <div class="bt-receipt-divider"></div>
                         ${contentHtml}
                         <div class="bt-receipt-divider"></div>
                         <div class="bt-preview-promo">Periksa Invoice &amp; Ambil Promo !</div>
                         <div class="bt-preview-dash">${this.escapeHtml(dashLine)}</div>
-                        <div class="bt-receipt-center">customer.hibiscusefsya.com</div>
+                        <div class="bt-receipt-center">fumiko.local</div>
                         <div class="bt-preview-dash">${this.escapeHtml(dashLine)}</div>
-                        <div class="bt-receipt-center">marketing@hibiscusefsya.com</div>
+                        <div class="bt-receipt-center">admin@fumiko.com</div>
                         <div class="bt-preview-gap"></div>
                         <div class="bt-receipt-center">Official WA Chat:</div>
                         <div class="bt-receipt-center">${this.escapeHtml(this.formatPhone('+62 851-9555-0202'))}</div>
@@ -1372,7 +1372,7 @@ class BluetoothThermalPrinter {
         const printQR = options.printQR !== false;
         // Use absolute URL for logo to ensure it loads correctly
         const baseUrl = window.location.origin;
-        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logoHE1.png');
+        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logo-fumiko.jpg');
         const qrData = options.qrUrl || data.invoice_url || '';
         
         let parts = []; // Array of {type: 'text'|'image', data: ...}
@@ -1395,7 +1395,7 @@ class BluetoothThermalPrinter {
         
         // Header text
         let header = this.COMMANDS.ALIGN_CENTER;
-        header += this.COMMANDS.BOLD_ON + 'HIBISCUS EFSYA\n' + this.COMMANDS.BOLD_OFF;
+        header += this.COMMANDS.BOLD_ON + 'FUMIKO STYROFOAM\n' + this.COMMANDS.BOLD_OFF;
         header += 'INVOICE PENJUALAN\n';
         header += this.COMMANDS.ALIGN_LEFT + '\n';
         
@@ -1473,7 +1473,7 @@ class BluetoothThermalPrinter {
         
         // Final footer
         let finalFooter = '\n' + this.COMMANDS.ALIGN_CENTER;
-        finalFooter += 'marketing@hibiscusefsya.com\n';
+        finalFooter += 'admin@fumiko.com\n';
         finalFooter += '-- Terima Kasih --\n';
         finalFooter += '\n\n\n\n';
         
@@ -1489,7 +1489,7 @@ class BluetoothThermalPrinter {
         const printQR = options.printQR !== false;
         // Use absolute URL for logo to ensure it loads correctly
         const baseUrl = window.location.origin;
-        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logoHE1.png');
+        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logo-fumiko.jpg');
         const qrData = options.qrUrl || data.invoice_url || '';
         
         let parts = [];
@@ -1510,7 +1510,7 @@ class BluetoothThermalPrinter {
         }
         
         let header = this.COMMANDS.ALIGN_CENTER;
-        header += this.COMMANDS.BOLD_ON + 'HIBISCUS EFSYA\n' + this.COMMANDS.BOLD_OFF;
+        header += this.COMMANDS.BOLD_ON + 'FUMIKO STYROFOAM\n' + this.COMMANDS.BOLD_OFF;
         header += 'PERMINTAAN PEMBELIAN\n';
         header += this.COMMANDS.ALIGN_LEFT + '\n';
         
@@ -1577,7 +1577,7 @@ class BluetoothThermalPrinter {
         }
         
         let finalFooter = '\n' + this.COMMANDS.ALIGN_CENTER;
-        finalFooter += 'marketing@hibiscusefsya.com\n';
+        finalFooter += 'admin@fumiko.com\n';
         finalFooter += '-- Dokumen Internal --\n';
         finalFooter += '\n\n\n\n';
         
@@ -1593,7 +1593,7 @@ class BluetoothThermalPrinter {
         const printQR = options.printQR !== false;
         // Use absolute URL for logo to ensure it loads correctly
         const baseUrl = window.location.origin;
-        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logoHE1.png');
+        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logo-fumiko.jpg');
         const qrData = options.qrUrl || data.invoice_url || '';
 
         // Jenis biaya (masuk/keluar) untuk judul & label
@@ -1622,7 +1622,7 @@ class BluetoothThermalPrinter {
         }
         
         let header = this.COMMANDS.ALIGN_CENTER;
-        header += this.COMMANDS.BOLD_ON + 'HIBISCUS EFSYA\n' + this.COMMANDS.BOLD_OFF;
+        header += this.COMMANDS.BOLD_ON + 'FUMIKO STYROFOAM\n' + this.COMMANDS.BOLD_OFF;
         header += titleText + '\n';
         header += this.COMMANDS.ALIGN_LEFT + '\n';
         
@@ -1683,7 +1683,7 @@ class BluetoothThermalPrinter {
         }
         
         let finalFooter = '\n' + this.COMMANDS.ALIGN_CENTER;
-        finalFooter += 'marketing@hibiscusefsya.com\n';
+        finalFooter += 'admin@fumiko.com\n';
         finalFooter += '-- Terima Kasih --\n';
         finalFooter += '\n\n\n\n';
         
@@ -1699,7 +1699,7 @@ class BluetoothThermalPrinter {
         const printQR = options.printQR !== false;
         // Use absolute URL for logo to ensure it loads correctly
         const baseUrl = window.location.origin;
-        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logoHE1.png');
+        const logoUrl = options.logoUrl || (baseUrl + '/assets/img/logo-fumiko.jpg');
         const qrData = options.qrUrl || data.invoice_url || '';
         
         let parts = [];
@@ -1720,7 +1720,7 @@ class BluetoothThermalPrinter {
         }
         
         let header = this.COMMANDS.ALIGN_CENTER;
-        header += this.COMMANDS.BOLD_ON + 'HIBISCUS EFSYA\n' + this.COMMANDS.BOLD_OFF;
+        header += this.COMMANDS.BOLD_ON + 'FUMIKO STYROFOAM\n' + this.COMMANDS.BOLD_OFF;
         header += 'LAPORAN KUNJUNGAN\n';
         header += this.COMMANDS.ALIGN_LEFT + '\n';
         
@@ -1799,7 +1799,7 @@ class BluetoothThermalPrinter {
         }
         
         let finalFooter = '\n' + this.COMMANDS.ALIGN_CENTER;
-        finalFooter += 'marketing@hibiscusefsya.com\n';
+        finalFooter += 'admin@fumiko.com\n';
         finalFooter += '-- Dokumen Internal --\n';
         finalFooter += '\n\n\n\n';
         
@@ -1969,7 +1969,7 @@ async function printViaBluetooth(button, type, jsonUrl, options = {}) {
         printLogo: true,
         printQR: false,
         paperSize: '58mm',
-        logoUrl: baseUrl + '/assets/img/logoHE1.png',
+        logoUrl: baseUrl + '/assets/img/logo-fumiko.jpg',
         ...options
     };
     
