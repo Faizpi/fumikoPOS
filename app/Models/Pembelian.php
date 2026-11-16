@@ -113,4 +113,6 @@ class Pembelian extends Model
     {
         return static::generateNomorWithRetry('PR', $userId, $createdAt);
     }
+
+    use Concerns\UsesUuidRouteKey;
 }

@@ -108,4 +108,6 @@ class Penjualan extends Model
     {
         return static::generateNomorWithRetry('INV', $userId, $createdAt);
     }
+
+    use Concerns\UsesUuidRouteKey;
 }

@@ -124,8 +124,6 @@ class AktivitasTerbaru extends BaseTableWidget
 
         return $penjualans
             ->concat($pembelians)
-            ->concat($biayas)
-            ->concat($kunjungans)
             ->concat($pembayarans)
             ->sortByDesc('tanggal')
             ->take($limit)

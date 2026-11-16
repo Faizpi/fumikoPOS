@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Biaya;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 use Filament\Support\RawJs;
@@ -36,16 +35,12 @@ class ChartTrenPenjualan extends ChartWidget
 
         $penjualanData = [];
         $pembelianData = [];
-        $biayaData = [];
 
         foreach ($months as $month) {
             $penjualanQuery = Penjualan::whereYear('tgl_transaksi', $month->year)
                 ->whereMonth('tgl_transaksi', $month->month);
 
             $pembelianQuery = Pembelian::whereYear('tgl_transaksi', $month->year)
-                ->whereMonth('tgl_transaksi', $month->month);
-
-            $biayaQuery = Biaya::whereYear('tgl_transaksi', $month->year)
                 ->whereMonth('tgl_transaksi', $month->month);
 
             // Apply role-based filtering
@@ -62,11 +57,9 @@ class ChartTrenPenjualan extends ChartWidget
                 if ($gudangId) {
                     $penjualanQuery->where('gudang_id', $gudangId);
                     $pembelianQuery->where('gudang_id', $gudangId);
-                    $biayaQuery->where('gudang_id', $gudangId);
                 } else {
                     $penjualanData[] = 0;
                     $pembelianData[] = 0;
-                    $biayaData[] = 0;
 
                     continue;
                 }
@@ -74,7 +67,6 @@ class ChartTrenPenjualan extends ChartWidget
 
             $penjualanData[] = (float) $penjualanQuery->sum('grand_total');
             $pembelianData[] = (float) $pembelianQuery->sum('grand_total');
-            $biayaData[] = (float) $biayaQuery->sum('grand_total');
         }
 
         return [
@@ -114,25 +106,6 @@ class ChartTrenPenjualan extends ChartWidget
                     'pointBorderWidth' => 1.5,
                     'pointHoverRadius' => 5,
                     'pointHoverBackgroundColor' => '#C07A10',
-                    'pointHoverBorderColor' => '#ffffff',
-                    'pointHoverBorderWidth' => 2,
-                ],
-                [
-                    'label' => 'Biaya',
-                    'data' => $biayaData,
-
-                    // Rose – Biaya
-                    'borderColor' => '#E54865',
-
-                    'fill' => false,
-                    'tension' => 0.4,
-                    'borderWidth' => 2.25,
-                    'pointRadius' => 2,
-                    'pointBackgroundColor' => '#E54865',
-                    'pointBorderColor' => '#ffffff',
-                    'pointBorderWidth' => 1.5,
-                    'pointHoverRadius' => 5,
-                    'pointHoverBackgroundColor' => '#D03D58',
                     'pointHoverBorderColor' => '#ffffff',
                     'pointHoverBorderWidth' => 2,
                 ],

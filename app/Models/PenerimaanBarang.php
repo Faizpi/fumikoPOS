@@ -83,4 +83,6 @@ class PenerimaanBarang extends Model
     {
         return static::generateNomorWithRetry('RCV', $userId, $createdAt);
     }
+
+    use Concerns\UsesUuidRouteKey;
 }

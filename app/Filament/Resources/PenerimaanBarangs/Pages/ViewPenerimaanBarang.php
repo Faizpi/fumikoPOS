@@ -346,14 +346,14 @@ class ViewPenerimaanBarang extends ViewRecord
                 ->label('Cetak Surat Jalan Masuk (A5)')
                 ->icon('heroicon-o-document-text')
                 ->color('warning')
-                ->url(fn () => route('penerimaan-barang.print-surat-jalan-a5', $this->getRecord()->id))
+                ->url(fn () => route('penerimaan-barang.print-surat-jalan-a5', $this->getRecord()))
                 ->openUrlInNewTab(),
 
             Action::make('print')
                 ->label('Print')
                 ->icon('heroicon-o-printer')
                 ->color('info')
-                ->url(fn () => route('penerimaan-barang.print', $this->getRecord()->id))
+                ->url(fn () => route('penerimaan-barang.print', $this->getRecord()))
                 ->openUrlInNewTab(),
 
             // ===== QR CODE =====

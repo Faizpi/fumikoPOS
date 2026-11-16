@@ -54,14 +54,10 @@ class StatsOperasional extends BaseStatsOverviewWidget
         $pendingBreakdown = $isUser ? [
             Penjualan::where('user_id', $userId)->where('status', 'Pending')->count(),
             Pembelian::where('user_id', $userId)->where('status', 'Pending')->count(),
-            Biaya::where('user_id', $userId)->where('status', 'Pending')->count(),
-            Kunjungan::where('user_id', $userId)->where('status', 'Pending')->count(),
             Pembayaran::where('user_id', $userId)->where('status', 'Pending')->count(),
         ] : [
             $scope(Penjualan::where('status', 'Pending'))->count(),
             $scope(Pembelian::where('status', 'Pending'))->count(),
-            $scope(Biaya::where('status', 'Pending'))->count(),
-            $scope(Kunjungan::where('status', 'Pending'), 'gudang_id', 'user_id')->count(),
             $scope(Pembayaran::where('status', 'Pending'))->count(),
         ];
         $menungguApproval = array_sum($pendingBreakdown);

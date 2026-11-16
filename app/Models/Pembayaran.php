@@ -117,4 +117,6 @@ class Pembayaran extends Model
     {
         return static::generateNomorWithRetry('PAY', $userId, $createdAt);
     }
+
+    use Concerns\UsesUuidRouteKey;
 }

@@ -2,8 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Biaya;
-use App\Models\Kunjungan;
 use App\Models\Pembayaran;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
@@ -54,8 +52,6 @@ class ChartKomposisiStatus extends ChartWidget
         foreach ($statuses as $status => $count) {
             $statuses[$status] += (int) $scoped(Penjualan::where('status', $status))->count();
             $statuses[$status] += (int) $scoped(Pembelian::where('status', $status))->count();
-            $statuses[$status] += (int) $scoped(Biaya::where('status', $status))->count();
-            $statuses[$status] += (int) $scoped(Kunjungan::where('status', $status))->count();
             $statuses[$status] += (int) $scoped(Pembayaran::where('status', $status))->count();
         }
 

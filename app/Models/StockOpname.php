@@ -95,4 +95,6 @@ class StockOpname extends Model
     {
         return $this->status === 'Applied';
     }
+
+    use Concerns\UsesUuidRouteKey;
 }

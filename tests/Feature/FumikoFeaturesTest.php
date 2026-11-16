@@ -93,20 +93,28 @@ class FumikoFeaturesTest extends TestCase
 
         $this->actingAs($admin);
 
-        $this->get(route('penjualan.print-faktur-a5', $penjualan->id))
+        $fakturUrl = route('penjualan.print-faktur-a5', $penjualan);
+        $sjUrl = route('penjualan.print-surat-jalan-a5', $penjualan);
+        $sjMasukUrl = route('penerimaan-barang.print-surat-jalan-a5', $penerimaan);
+
+        $this->assertStringContainsString($penjualan->uuid, $fakturUrl);
+        $this->assertStringContainsString($penjualan->uuid, $sjUrl);
+        $this->assertStringContainsString($penerimaan->uuid, $sjMasukUrl);
+
+        $this->get($fakturUrl)
             ->assertOk()
             ->assertSee('FUMIKO STYROFOAM')
             ->assertSee('size: A5 landscape')
             ->assertSee($penjualan->nama_toko)
             ->assertSee($penjualan->items->first()->ukuran);
 
-        $this->get(route('penjualan.print-surat-jalan-a5', $penjualan->id))
+        $this->get($sjUrl)
             ->assertOk()
             ->assertSee('SURAT JALAN')
             ->assertSee('size: A5 landscape')
             ->assertSee($penjualan->nama_toko);
 
-        $this->get(route('penerimaan-barang.print-surat-jalan-a5', $penerimaan->id))
+        $this->get($sjMasukUrl)
             ->assertOk()
             ->assertSee('SURAT JALAN MASUK GUDANG')
             ->assertSee($penerimaan->no_surat_jalan);
