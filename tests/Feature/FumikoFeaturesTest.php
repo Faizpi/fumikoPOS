@@ -6,7 +6,12 @@ use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\HutangPage;
 use App\Filament\Pages\PiutangPage;
 use App\Filament\Resources\Gudangs\GudangResource;
+use App\Filament\Resources\Pembayarans\Pages\CreatePembayaran;
+use App\Filament\Resources\Penjualans\Pages\CreatePenjualan;
+use App\Filament\Resources\Penjualans\Pages\ViewPenjualan;
 use App\Models\Gudang;
+use App\Models\GudangProduk;
+use App\Models\Pembayaran;
 use App\Models\Pembelian;
 use App\Models\PenerimaanBarang;
 use App\Models\Penjualan;
@@ -126,5 +131,106 @@ class FumikoFeaturesTest extends TestCase
         $hutangRows = $hutangComponent->getListTempo()->getCollection();
         $pembelian = Pembelian::firstOrFail();
         $this->assertTrue($hutangRows->contains(fn ($row) => $row['no_surat_jalan'] === $pembelian->no_surat_jalan));
+    }
+
+    public function test_all_core_filament_pages_render_and_end_to_end_sale_payment_flow_works(): void
+    {
+        $this->seed(FumikoDemoSeeder::class);
+
+        $admin = User::where('email', 'admin@fumiko.com')->firstOrFail();
+        $gudang = Gudang::where('nama_gudang', 'Gudang Utama Fumiko')->firstOrFail();
+        $produk = Produk::where('item_code', 'FMK-BOX-75')->firstOrFail();
+
+        $this->actingAs($admin);
+
+        // 1. Pastikan seluruh halaman inti Fumiko POS bisa dibuka oleh Admin (HTTP 200)
+        foreach ([
+            '/app',
+            '/app/penjualans',
+            '/app/penjualans/create',
+            '/app/pembayarans',
+            '/app/pembayarans/create',
+            '/app/pembelians',
+            '/app/pembelians/create',
+            '/app/penerimaan-barangs',
+            '/app/penerimaan-barangs/create',
+            '/app/stock-opnames',
+            '/app/stock-opnames/create',
+            '/app/stok-page',
+            '/app/piutang-page',
+            '/app/hutang-page',
+            '/app/produks',
+            '/app/kontaks',
+        ] as $url) {
+            $response = $this->get($url);
+            $this->assertSame(200, $response->status(), "Admin gagal akses {$url}");
+        }
+
+        $stokAwal = (int) GudangProduk::where('gudang_id', $gudang->id)
+            ->where('produk_id', $produk->id)
+            ->value('stok_penjualan');
+
+        // 2. Buat transaksi Barang Keluar via Filament CreatePenjualan
+        Livewire::test(CreatePenjualan::class)
+            ->fillForm([
+                'gudang_id' => $gudang->id,
+                'tipe_harga' => 'retail',
+                'syarat_pembayaran' => 'Net 7',
+                'tgl_transaksi' => now()->toDateString(),
+                'nama_toko' => 'TB. Jaya Makmur Packaging',
+                'pelanggan' => 'Budi Santoso',
+                'no_telepon' => '081234567899',
+                'alamat_penagihan' => 'Jl. Merdeka No. 10',
+                'items' => [
+                    [
+                        'produk_id' => $produk->id,
+                        'ukuran' => '75 x 42 x 32 cm',
+                        'kuantitas' => 5,
+                        'unit' => 'Pcs',
+                        'harga_satuan' => 48000,
+                        'diskon' => 0,
+                        'jumlah_baris' => 240000,
+                    ],
+                ],
+                'diskon_akhir' => 0,
+                'tax_percentage' => 0,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $penjualan = Penjualan::where('nama_toko', 'TB. Jaya Makmur Packaging')->latest('id')->firstOrFail();
+        $this->assertSame('Pending', $penjualan->status);
+        $this->assertSame('75 x 42 x 32 cm', $penjualan->items()->firstOrFail()->ukuran);
+
+        // 3. Approve transaksi Barang Keluar -> stok berkurang otomatis
+        Livewire::test(ViewPenjualan::class, ['record' => $penjualan->getRouteKey()])
+            ->callAction('approve');
+
+        $penjualan->refresh();
+        $this->assertSame('Approved', $penjualan->status);
+        $stokSesudah = (int) GudangProduk::where('gudang_id', $gudang->id)
+            ->where('produk_id', $produk->id)
+            ->value('stok_penjualan');
+        $this->assertSame($stokAwal - 5, $stokSesudah);
+
+        // 4. Input Pembayaran (Uang Kas) -> langsung Approved & invoice otomatis Lunas
+        Livewire::test(CreatePembayaran::class)
+            ->fillForm([
+                'gudang_id' => $gudang->id,
+                'penjualan_ids' => [$penjualan->id],
+                'tgl_pembayaran' => now()->toDateString(),
+                'metode_pembayaran' => 'Cash',
+                'jumlah_bayar' => 240000,
+                'keterangan' => 'Pelunasan uji coba',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $penjualan->refresh();
+        $this->assertSame('Lunas', $penjualan->status);
+        $this->assertSame(
+            'Approved',
+            Pembayaran::where('penjualan_id', $penjualan->id)->firstOrFail()->status
+        );
     }
 }
