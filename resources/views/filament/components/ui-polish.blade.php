@@ -13,14 +13,14 @@
         --admin-shadow-card: 0 10px 28px rgba(15, 23, 42, 0.06);
         --sidebar-surface: #ffffff;
         --sidebar-surface-hover: #f4f4f5;
-        --sidebar-surface-active: #eff6ff;
+        --sidebar-surface-active: #fef9e7;
         --sidebar-border: #e4e4e7;
         --sidebar-text: #3f3f46;
         --sidebar-text-muted: #71717a;
-        --sidebar-text-active: #1d4ed8;
+        --sidebar-text-active: #7c5e10;
         --sidebar-icon: #71717a;
-        --sidebar-icon-active: #2563eb;
-        --sidebar-focus: rgba(37, 99, 235, 0.45);
+        --sidebar-icon-active: #b8860b;
+        --sidebar-focus: rgba(201, 162, 39, 0.45);
     }
 
     .dark {
@@ -33,13 +33,13 @@
         --admin-shadow-card: 0 12px 30px rgba(0, 0, 0, 0.24);
         --sidebar-surface: #18181b;
         --sidebar-surface-hover: #27272a;
-        --sidebar-surface-active: rgba(37, 99, 235, 0.18);
+        --sidebar-surface-active: rgba(201, 162, 39, 0.18);
         --sidebar-border: rgba(255, 255, 255, 0.10);
         --sidebar-text: #e4e4e7;
         --sidebar-text-muted: #a1a1aa;
-        --sidebar-text-active: #bfdbfe;
+        --sidebar-text-active: #f5d078;
         --sidebar-icon: #a1a1aa;
-        --sidebar-icon-active: #60a5fa;
+        --sidebar-icon-active: #e5c158;
         --sidebar-focus: rgba(96, 165, 250, 0.70);
     }
 
