@@ -32,9 +32,10 @@
     }
 
     .he-auth-root {
-        --fm-primary: #92400e;
-        --fm-primary-hover: #78350f;
-        --fm-gold: #eab308;
+        --fm-gold: #c9a227;
+        --fm-gold-light: #e5c158;
+        --fm-gold-dark: #7c5e10;
+        --fm-ink-on-gold: #0b0f17;
         --fm-panel-bg: #ffffff;
         --fm-panel-text: #0f172a;
         --fm-muted: #475569;
@@ -42,7 +43,7 @@
         --fm-input-bg: #ffffff;
         --fm-placeholder: #64748b;
         --fm-demo-bg: #f8fafc;
-        --fm-demo-hover: #fef3c7;
+        --fm-demo-hover: #fef9e7;
         width: 100%;
         min-height: 100svh;
         background: var(--fm-panel-bg);
@@ -50,8 +51,7 @@
     }
 
     .dark .he-auth-root {
-        --fm-primary: #d97706;
-        --fm-primary-hover: #b45309;
+        --fm-gold-dark: #e5c158;
         --fm-panel-bg: #0b0f17;
         --fm-panel-text: #f8fafc;
         --fm-muted: #cbd5e1;
@@ -59,12 +59,12 @@
         --fm-input-bg: #111827;
         --fm-placeholder: #94a3b8;
         --fm-demo-bg: #111827;
-        --fm-demo-hover: #1e293b;
+        --fm-demo-hover: #1c1917;
     }
 
     .he-auth-shell {
         display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(400px, .95fr);
+        grid-template-columns: minmax(0, 1fr) minmax(400px, 1fr);
         width: 100%;
         min-height: 100svh;
         background: var(--fm-panel-bg);
@@ -74,14 +74,14 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        gap: 28px;
+        justify-content: center;
+        gap: 36px;
         min-width: 0;
-        padding: 44px 52px;
+        padding: 48px 56px;
         overflow: hidden;
-        background: radial-gradient(circle at top right, #231c10 0%, #0d1016 58%, #07090d 100%);
+        background: radial-gradient(circle at top right, #231d0f 0%, #0d1016 58%, #07090d 100%);
         color: #f8fafc;
-        border-right: 1px solid rgba(234, 179, 8, .22);
+        border-right: 1px solid rgba(201, 162, 39, .28);
     }
 
     .he-auth-brand::before {
@@ -89,8 +89,8 @@
         position: absolute;
         inset: 0;
         background:
-            linear-gradient(rgba(234, 179, 8, .08) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(234, 179, 8, .08) 1px, transparent 1px);
+            linear-gradient(rgba(201, 162, 39, .08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(201, 162, 39, .08) 1px, transparent 1px);
         background-size: 40px 40px;
         mask-image: linear-gradient(135deg, rgba(0, 0, 0, .75), transparent 72%);
         pointer-events: none;
@@ -108,87 +108,42 @@
         gap: 14px;
     }
 
-    .he-brand-mark img,
-    .he-mobile-logo img {
-        width: 84px;
-        height: 48px;
-        border-radius: 8px;
+    .he-brand-mark img {
+        width: 120px;
+        height: 68px;
+        border-radius: 10px;
         background: #090b0f;
         object-fit: cover;
-        border: 1px solid rgba(234, 179, 8, .45);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+        border: 1px solid rgba(229, 193, 88, .48);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, .4);
     }
 
     .he-brand-name {
         color: #f8fafc;
-        font-size: 17px;
+        font-size: 20px;
         font-weight: 800;
         line-height: 1.15;
     }
 
-    .he-brand-caption {
-        margin-top: 3px;
-        color: #f5d078;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
     .he-auth-copy {
-        max-width: 560px;
+        max-width: 540px;
     }
 
     .he-auth-title {
-        max-width: 560px;
+        max-width: 540px;
         margin: 0;
         color: #ffffff;
         font-size: 44px;
         font-weight: 850;
-        line-height: 1.06;
+        line-height: 1.08;
     }
 
     .he-auth-text {
-        max-width: 520px;
-        margin: 16px 0 0;
+        max-width: 500px;
+        margin: 18px 0 0;
         color: #e2e8f0;
         font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .he-feature-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        max-width: 640px;
-    }
-
-    .he-feature {
-        min-height: 86px;
-        padding: 14px;
-        border: 1px solid rgba(234, 179, 8, .25);
-        border-radius: 8px;
-        background: rgba(17, 24, 39, .78);
-    }
-
-    .he-feature-index {
-        color: #f5d078;
-        font-size: 11px;
-        font-weight: 800;
-        line-height: 1;
-    }
-
-    .he-feature-title {
-        margin-top: 8px;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 800;
-        line-height: 1.22;
-    }
-
-    .he-feature-text {
-        margin-top: 5px;
-        color: #cbd5e1;
-        font-size: 12px;
-        line-height: 1.45;
+        line-height: 1.65;
     }
 
     .he-auth-form-side {
@@ -213,15 +168,12 @@
         color: var(--fm-panel-text);
     }
 
-    .he-mobile-brand-caption {
-        color: var(--fm-primary);
-    }
-
     .he-form-eyebrow {
-        color: var(--fm-primary);
+        color: var(--fm-gold-dark);
         font-size: 12px;
         font-weight: 800;
         text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     .he-form-title {
@@ -270,14 +222,14 @@
     }
 
     .he-login-card .fi-input-wrp:focus-within {
-        border-color: var(--fm-primary) !important;
-        box-shadow: 0 0 0 3px rgba(146, 64, 14, .18) !important;
+        border-color: var(--fm-gold) !important;
+        box-shadow: 0 0 0 3px rgba(201, 162, 39, .22) !important;
     }
 
     .he-login-card .fi-input,
     .he-login-card input {
         color: var(--fm-panel-text) !important;
-        caret-color: var(--fm-primary);
+        caret-color: var(--fm-gold-dark);
         background: transparent !important;
     }
 
@@ -298,28 +250,28 @@
     }
 
     .he-login-card .fi-checkbox-input:checked {
-        border-color: var(--fm-primary) !important;
-        background-color: var(--fm-primary) !important;
+        border-color: var(--fm-gold) !important;
+        background-color: var(--fm-gold) !important;
     }
 
     .he-login-card .fi-btn,
     .he-login-card .fi-btn.fi-color-primary {
         min-height: 44px;
-        border: 0 !important;
+        border: 1px solid #b58e1c !important;
         border-radius: 8px !important;
-        background: linear-gradient(135deg, #92400e, #b45309) !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #d4af37 0%, #f0cf65 55%, #c9a227 100%) !important;
+        color: var(--fm-ink-on-gold) !important;
         font-weight: 800;
-        box-shadow: 0 10px 20px rgba(146, 64, 14, .22) !important;
+        box-shadow: 0 8px 18px rgba(201, 162, 39, .28) !important;
     }
 
     .he-login-card .fi-btn:hover,
     .he-login-card .fi-btn.fi-color-primary:hover {
-        background: linear-gradient(135deg, #78350f, #92400e) !important;
+        background: linear-gradient(135deg, #c59b27 0%, #e5c158 55%, #b58e1c 100%) !important;
     }
 
     .he-login-card .fi-btn-label {
-        color: #ffffff !important;
+        color: var(--fm-ink-on-gold) !important;
     }
 
     .fm-demo-box {
@@ -343,12 +295,12 @@
     }
 
     .fm-demo-badge {
-        padding: 3px 8px;
+        padding: 3px 10px;
         border-radius: 999px;
-        background: #92400e;
-        color: #ffffff;
+        background: linear-gradient(135deg, #d4af37, #e5c158);
+        color: var(--fm-ink-on-gold);
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .fm-demo-list {
@@ -375,9 +327,9 @@
 
     .fm-demo-btn:hover,
     .fm-demo-btn:focus-visible {
-        border-color: var(--fm-primary);
+        border-color: var(--fm-gold);
         background: var(--fm-demo-hover);
-        outline: 2px solid var(--fm-primary);
+        outline: 2px solid var(--fm-gold);
         outline-offset: 1px;
     }
 
@@ -397,12 +349,12 @@
 
     .fm-demo-cta {
         flex: none;
-        padding: 5px 10px;
+        padding: 5px 12px;
         border-radius: 6px;
-        background: #92400e;
-        color: #ffffff;
+        background: linear-gradient(135deg, #d4af37, #e5c158);
+        color: var(--fm-ink-on-gold);
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     @media (max-width: 1280px) {
@@ -454,7 +406,6 @@
             <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Logo Fumiko Styrofoam">
             <div>
                 <div class="he-brand-name">Fumiko POS</div>
-                <div class="he-brand-caption">Designed for life, Built to Last</div>
             </div>
         </div>
 
@@ -464,38 +415,14 @@
                 Sistem operasional terpadu untuk pencatatan barang keluar, cetak Faktur & Surat Jalan ukuran A5, stock opname gudang, pemantauan tagihan di luar, hingga hutang surat jalan supplier.
             </p>
         </div>
-
-        <div class="he-feature-grid" aria-label="Fitur utama Fumiko POS">
-            <div class="he-feature">
-                <div class="he-feature-index">01</div>
-                <div class="he-feature-title">Barang Keluar & Cetak A5</div>
-                <div class="he-feature-text">Catat nama barang, ukuran pesanan, toko, pembeli & langsung cetak Faktur dan Surat Jalan A5.</div>
-            </div>
-            <div class="he-feature">
-                <div class="he-feature-index">02</div>
-                <div class="he-feature-title">Stock Opname Gudang</div>
-                <div class="he-feature-text">Pantau posisi harian bahan yang dijual, aset perusahaan, dan perlengkapan lain-lain.</div>
-            </div>
-            <div class="he-feature">
-                <div class="he-feature-index">03</div>
-                <div class="he-feature-title">Tagihan di Luar & Uang Kas</div>
-                <div class="he-feature-text">Lihat invoice belum lunas vs lunas, dan update uang kas otomatis saat pembayaran masuk.</div>
-            </div>
-            <div class="he-feature">
-                <div class="he-feature-index">04</div>
-                <div class="he-feature-title">Surat Jalan Supplier</div>
-                <div class="he-feature-text">Samakan barang masuk gudang dengan nomor surat jalan supplier beserta posisi hutangnya.</div>
-            </div>
-        </div>
     </section>
 
     <section class="he-auth-form-side" aria-label="Form login Fumiko POS">
         <div class="he-auth-panel">
             <div class="he-mobile-logo">
-                <img src="{{ asset('assets/img/logo-fumiko.jpg') }}" alt="Logo Fumiko Styrofoam">
+                <span style="display: inline-block; width: 0.45rem; height: 1.5rem; border-radius: 999px; background: linear-gradient(180deg, #e5c158 0%, #b8860b 100%);"></span>
                 <div>
                     <div class="he-brand-name he-mobile-brand-name">Fumiko POS</div>
-                    <div class="he-brand-caption he-mobile-brand-caption">Designed for life, Built to Last</div>
                 </div>
             </div>
 
@@ -509,7 +436,7 @@
 
             <div class="fm-demo-box" aria-label="Shortcut role demo">
                 <div class="fm-demo-heading">
-                    <span class="fm-demo-title">Shortcut Login Demo (1-Klik)</span>
+                    <span class="fm-demo-title">Shortcut Login Demo</span>
                     <span class="fm-demo-badge">3 Role Aktif</span>
                 </div>
 

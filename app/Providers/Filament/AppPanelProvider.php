@@ -47,7 +47,7 @@ class AppPanelProvider extends PanelProvider
             ->favicon(asset('assets/img/logo-fumiko.jpg'))
             ->font('Instrument Sans')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#c59b27'),
             ])
             ->databaseNotifications()
             ->sidebarCollapsibleOnDesktop()

@@ -1,13 +1,6 @@
-<div class="he-brand-lockup">
-    <img
-        src="{{ asset('assets/img/logo-fumiko.jpg') }}"
-        alt="Fumiko Styrofoam"
-        width="40"
-        height="40"
-        class="he-brand-logo"
-        style="width: 2.25rem; height: 2.25rem; max-width: 2.25rem; max-height: 2.25rem; object-fit: cover; border-radius: 0.375rem; border: 1px solid rgba(245, 158, 11, 0.35);"
-    >
-    <span class="he-brand-title">
+<div class="he-brand-lockup" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+    <span style="display: inline-block; width: 0.5rem; height: 1.35rem; border-radius: 999px; background: linear-gradient(180deg, #e5c158 0%, #b8860b 100%);"></span>
+    <span class="he-brand-title" style="font-weight: 800; letter-spacing: -0.02em; font-size: 1.125rem;">
         Fumiko POS
     </span>
 </div>

@@ -40,9 +40,8 @@ class PanelBootTest extends TestCase
     {
         $brand = view('filament.components.brand')->render();
 
-        $this->assertStringContainsString('width="40"', $brand);
-        $this->assertStringContainsString('height="40"', $brand);
         $this->assertStringContainsString('Fumiko POS', $brand);
+        $this->assertStringNotContainsString('<img', $brand);
     }
 
     public function test_login_form_authenticates_super_admin(): void
