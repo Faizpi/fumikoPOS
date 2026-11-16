@@ -7,7 +7,7 @@
 
     .dark body:has(.he-auth-root),
     body.dark:has(.he-auth-root) {
-        background: #090c10;
+        background: #0c0c0e;
     }
 
     .fi-simple-layout {
@@ -52,14 +52,14 @@
 
     .dark .he-auth-root {
         --fm-gold-dark: #e5c158;
-        --fm-panel-bg: #0b0f17;
-        --fm-panel-text: #f8fafc;
-        --fm-muted: #cbd5e1;
-        --fm-border: #334155;
-        --fm-input-bg: #111827;
-        --fm-placeholder: #94a3b8;
-        --fm-demo-bg: #111827;
-        --fm-demo-hover: #1c1917;
+        --fm-panel-bg: #0c0c0e;
+        --fm-panel-text: #f5f5f4;
+        --fm-muted: #a8a29e;
+        --fm-border: #2c2923;
+        --fm-input-bg: #151518;
+        --fm-placeholder: #78716c;
+        --fm-demo-bg: #151518;
+        --fm-demo-hover: #1f1c14;
     }
 
     .he-auth-shell {
@@ -233,6 +233,14 @@
         background: transparent !important;
     }
 
+    .he-login-card input:-webkit-autofill,
+    .he-login-card input:-webkit-autofill:hover,
+    .he-login-card input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 100px var(--fm-input-bg) inset !important;
+        -webkit-text-fill-color: var(--fm-panel-text) !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
     .he-login-card .fi-input::placeholder,
     .he-login-card input::placeholder {
         color: var(--fm-placeholder) !important;
@@ -312,10 +320,10 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 10px;
         width: 100%;
-        min-height: 48px;
-        padding: 10px 12px;
+        min-height: 44px;
+        padding: 8px 12px;
         border: 1px solid var(--fm-border);
         border-radius: 8px;
         background: var(--fm-demo-bg);
@@ -333,6 +341,14 @@
         outline-offset: 1px;
     }
 
+    .fm-demo-info {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+        min-width: 0;
+    }
+
     .fm-demo-role {
         font-size: 13px;
         font-weight: 800;
@@ -341,10 +357,9 @@
     }
 
     .fm-demo-meta {
-        margin-top: 2px;
-        font-size: 11.5px;
+        font-size: 12px;
         color: var(--fm-muted);
-        line-height: 1.35;
+        line-height: 1.25;
     }
 
     .fm-demo-cta {
@@ -437,7 +452,6 @@
             <div class="fm-demo-box" aria-label="Shortcut role demo">
                 <div class="fm-demo-heading">
                     <span class="fm-demo-title">Shortcut Login Demo</span>
-                    <span class="fm-demo-badge">3 Role Aktif</span>
                 </div>
 
                 <div class="fm-demo-list">
@@ -448,9 +462,9 @@
                             wire:loading.attr="disabled"
                             class="fm-demo-btn"
                         >
-                            <div>
-                                <div class="fm-demo-role">{{ $demo['label'] }} · <span style="font-weight:600;">{{ $demo['role_label'] }}</span></div>
-                                <div class="fm-demo-meta">{{ $demo['email'] }} / {{ $demo['password'] }} - {{ $demo['hint'] }}</div>
+                            <div class="fm-demo-info">
+                                <span class="fm-demo-role">{{ $demo['label'] }}</span>
+                                <span class="fm-demo-meta">{{ $demo['email'] }}</span>
                             </div>
                             <span class="fm-demo-cta">Masuk</span>
                         </button>
