@@ -10,7 +10,7 @@
         --admin-border-strong: rgba(148, 163, 184, 0.32);
         --admin-text-muted: rgb(100, 116, 139);
         --admin-table-hover: rgb(248, 250, 252);
-        --admin-shadow-card: 0 10px 28px rgba(15, 23, 42, 0.06);
+        --admin-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
         --sidebar-surface: #ffffff;
         --sidebar-surface-hover: #f4f4f5;
         --sidebar-surface-active: #fef9e7;
@@ -30,7 +30,7 @@
         --admin-border-strong: rgba(255, 255, 255, 0.16);
         --admin-text-muted: rgb(148, 163, 184);
         --admin-table-hover: rgba(255, 255, 255, 0.05);
-        --admin-shadow-card: 0 12px 30px rgba(0, 0, 0, 0.24);
+        --admin-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2);
         --sidebar-surface: #18181b;
         --sidebar-surface-hover: #27272a;
         --sidebar-surface-active: rgba(201, 162, 39, 0.18);
@@ -128,16 +128,15 @@
 
     /* ===== Dashboard Charts ===== */
     .fi-dashboard-page .fi-wi-chart .fi-section {
-        transition: box-shadow 0.25s ease, transform 0.25s ease;
+        transition: border-color 0.15s ease;
     }
 
     .fi-dashboard-page .fi-wi-chart .fi-section:hover {
-        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
-        transform: translateY(-1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .dark .fi-dashboard-page .fi-wi-chart .fi-section:hover {
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .fi-dashboard-page .fi-wi-chart .fi-section-header {
@@ -345,11 +344,11 @@
     /* ===== Profile Page ===== */
     .fi-page-profile .fi-section {
         border-radius: 0.875rem;
-        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     }
 
     .dark .fi-page-profile .fi-section {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     /* ===== Modal tweaks ===== */

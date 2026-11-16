@@ -18,15 +18,15 @@
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
             font-size: 11px;
             line-height: 1.35;
-            color: #0f172a;
-            background: #e2e8f0;
+            color: #18181b;
+            background: #f3f3f1;
             padding: 20px;
             font-variant-numeric: tabular-nums;
         }
         .toolbar {
             max-width: 210mm;
             margin: 0 auto 14px auto;
-            background: #0f172a;
+            background: #141416;
             color: #f8fafc;
             padding: 10px 16px;
             border-radius: 8px;
@@ -46,8 +46,8 @@
             text-decoration: none;
             cursor: pointer;
             border: none;
-            background: #d97706;
-            color: #ffffff;
+            background: #d4af37;
+            color: #0b0f17;
         }
         .a5-sheet {
             width: 210mm;
@@ -55,7 +55,7 @@
             margin: 0 auto;
             background: #ffffff;
             padding: 10mm 12mm;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            border: 1px solid #d4d4d8;
             border-radius: 4px;
             display: flex;
             flex-direction: column;
@@ -65,7 +65,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid #0f172a;
+            border-bottom: 2px solid #18181b;
             padding-bottom: 8px;
             margin-bottom: 10px;
         }
@@ -84,12 +84,12 @@
         .brand-name {
             font-size: 16px;
             font-weight: 800;
-            color: #0f172a;
+            color: #18181b;
         }
         .brand-sub {
             font-size: 10px;
             font-weight: 600;
-            color: #b45309;
+            color: #7c5e10;
         }
         .doc-title-box {
             text-align: right;
@@ -97,13 +97,13 @@
         .doc-type {
             font-size: 15px;
             font-weight: 800;
-            color: #0f172a;
+            color: #18181b;
             text-transform: uppercase;
         }
         .doc-number {
             font-size: 12px;
             font-weight: 700;
-            color: #b45309;
+            color: #7c5e10;
             margin-top: 2px;
         }
         .info-grid {
@@ -128,7 +128,7 @@
             font-weight: 600;
         }
         .info-val {
-            color: #0f172a;
+            color: #18181b;
             font-weight: 600;
         }
         table.items-table {
@@ -137,13 +137,13 @@
             margin-bottom: 10px;
         }
         table.items-table th {
-            background: #0f172a;
+            background: #141416;
             color: #ffffff;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             padding: 5px 7px;
-            border: 1px solid #0f172a;
+            border: 1px solid #18181b;
             text-align: left;
         }
         table.items-table td {
@@ -163,7 +163,7 @@
         }
         .sig-space { height: 40px; }
         .sig-line {
-            border-top: 1px solid #0f172a;
+            border-top: 1px solid #18181b;
             padding-top: 3px;
             font-weight: 700;
         }

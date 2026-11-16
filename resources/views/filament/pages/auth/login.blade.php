@@ -79,9 +79,9 @@
         min-width: 0;
         padding: 48px 56px;
         overflow: hidden;
-        background: radial-gradient(circle at top right, #231d0f 0%, #0d1016 58%, #07090d 100%);
+        background: #0c0c0e;
         color: #f8fafc;
-        border-right: 1px solid rgba(201, 162, 39, .28);
+        border-right: 1px solid #2c2923;
     }
 
     .he-auth-brand::before {
@@ -114,8 +114,7 @@
         border-radius: 10px;
         background: #090b0f;
         object-fit: cover;
-        border: 1px solid rgba(229, 193, 88, .48);
-        box-shadow: 0 14px 32px rgba(0, 0, 0, .4);
+        border: 1px solid #3f3828;
     }
 
     .he-brand-name {
@@ -223,7 +222,7 @@
 
     .he-login-card .fi-input-wrp:focus-within {
         border-color: var(--fm-gold) !important;
-        box-shadow: 0 0 0 3px rgba(201, 162, 39, .22) !important;
+        box-shadow: none !important;
     }
 
     .he-login-card .fi-input,
@@ -267,15 +266,15 @@
         min-height: 44px;
         border: 1px solid #b58e1c !important;
         border-radius: 8px !important;
-        background: linear-gradient(135deg, #d4af37 0%, #f0cf65 55%, #c9a227 100%) !important;
+        background: #d4af37 !important;
         color: var(--fm-ink-on-gold) !important;
         font-weight: 800;
-        box-shadow: 0 8px 18px rgba(201, 162, 39, .28) !important;
+        box-shadow: none !important;
     }
 
     .he-login-card .fi-btn:hover,
     .he-login-card .fi-btn.fi-color-primary:hover {
-        background: linear-gradient(135deg, #c59b27 0%, #e5c158 55%, #b58e1c 100%) !important;
+        background: #c59b27 !important;
     }
 
     .he-login-card .fi-btn-label {
